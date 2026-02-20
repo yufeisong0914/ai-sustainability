@@ -1,0 +1,814 @@
+{
+  "gpt-4.1": {
+    "100in_300out": {
+      "model": "gpt-4.1",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.569,
+      "energy_max_wh": 1.173,
+      "alpha_min_wh_per_token": 0.0014225,
+      "alpha_max_wh_per_token": 0.0029325,
+      "alpha_mid_wh_per_token": 0.0021775
+    },
+    "1k_in_1k_out": {
+      "model": "gpt-4.1",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 2.646,
+      "energy_max_wh": 3.676,
+      "alpha_min_wh_per_token": 0.001323,
+      "alpha_max_wh_per_token": 0.001838,
+      "alpha_mid_wh_per_token": 0.0015804999999999999
+    },
+    "10k_in_1.5k_out": {
+      "model": "gpt-4.1",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 4.183,
+      "energy_max_wh": 5.4830000000000005,
+      "alpha_min_wh_per_token": 0.00036373913043478257,
+      "alpha_max_wh_per_token": 0.00047678260869565224,
+      "alpha_mid_wh_per_token": 0.0004202608695652174
+    }
+  },
+  "gpt-4.1-mini": {
+    "100in_300out": {
+      "model": "gpt-4.1-mini",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.369,
+      "energy_max_wh": 0.531,
+      "alpha_min_wh_per_token": 0.0009225,
+      "alpha_max_wh_per_token": 0.0013275000000000001,
+      "alpha_mid_wh_per_token": 0.0011250000000000001
+    },
+    "1k_in_1k_out": {
+      "model": "gpt-4.1-mini",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 1.3339999999999999,
+      "energy_max_wh": 1.756,
+      "alpha_min_wh_per_token": 0.000667,
+      "alpha_max_wh_per_token": 0.000878,
+      "alpha_mid_wh_per_token": 0.0007725
+    },
+    "10k_in_1.5k_out": {
+      "model": "gpt-4.1-mini",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 1.774,
+      "energy_max_wh": 2.4699999999999998,
+      "alpha_min_wh_per_token": 0.0001542608695652174,
+      "alpha_max_wh_per_token": 0.00021478260869565216,
+      "alpha_mid_wh_per_token": 0.00018452173913043477
+    }
+  },
+  "gpt-4.1-nano": {
+    "100in_300out": {
+      "model": "gpt-4.1-nano",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.15999999999999998,
+      "energy_max_wh": 0.254,
+      "alpha_min_wh_per_token": 0.00039999999999999996,
+      "alpha_max_wh_per_token": 0.000635,
+      "alpha_mid_wh_per_token": 0.0005175
+    },
+    "1k_in_1k_out": {
+      "model": "gpt-4.1-nano",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.46699999999999997,
+      "energy_max_wh": 0.6829999999999999,
+      "alpha_min_wh_per_token": 0.00023349999999999998,
+      "alpha_max_wh_per_token": 0.00034149999999999995,
+      "alpha_mid_wh_per_token": 0.0002875
+    },
+    "10k_in_1.5k_out": {
+      "model": "gpt-4.1-nano",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 0.733,
+      "energy_max_wh": 0.9209999999999999,
+      "alpha_min_wh_per_token": 6.373913043478261e-05,
+      "alpha_max_wh_per_token": 8.008695652173913e-05,
+      "alpha_mid_wh_per_token": 7.191304347826087e-05
+    }
+  },
+  "o4-mini-high": {
+    "100in_300out": {
+      "model": "o4-mini-high",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 2.181,
+      "energy_max_wh": 5.117,
+      "alpha_min_wh_per_token": 0.0054525,
+      "alpha_max_wh_per_token": 0.0127925,
+      "alpha_mid_wh_per_token": 0.0091225
+    },
+    "1k_in_1k_out": {
+      "model": "o4-mini-high",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 5.202999999999999,
+      "energy_max_wh": 9.557,
+      "alpha_min_wh_per_token": 0.0026014999999999996,
+      "alpha_max_wh_per_token": 0.0047785,
+      "alpha_mid_wh_per_token": 0.0036899999999999997
+    },
+    "10k_in_1.5k_out": {
+      "model": "o4-mini-high",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 5.563000000000001,
+      "energy_max_wh": 8.911,
+      "alpha_min_wh_per_token": 0.00048373913043478267,
+      "alpha_max_wh_per_token": 0.0007748695652173913,
+      "alpha_mid_wh_per_token": 0.000629304347826087
+    }
+  },
+  "o3": {
+    "100in_300out": {
+      "model": "o3",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.9530000000000001,
+      "energy_max_wh": 1.401,
+      "alpha_min_wh_per_token": 0.0023825,
+      "alpha_max_wh_per_token": 0.0035025,
+      "alpha_mid_wh_per_token": 0.0029425
+    },
+    "1k_in_1k_out": {
+      "model": "o3",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 3.0459999999999994,
+      "energy_max_wh": 7.26,
+      "alpha_min_wh_per_token": 0.0015229999999999996,
+      "alpha_max_wh_per_token": 0.00363,
+      "alpha_mid_wh_per_token": 0.0025765
+    },
+    "10k_in_1.5k_out": {
+      "model": "o3",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 11.139999999999999,
+      "energy_max_wh": 13.304,
+      "alpha_min_wh_per_token": 0.000968695652173913,
+      "alpha_max_wh_per_token": 0.0011568695652173914,
+      "alpha_mid_wh_per_token": 0.0010627826086956522
+    }
+  },
+  "o3-mini-high": {
+    "100in_300out": {
+      "model": "o3-mini-high",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 2.021,
+      "energy_max_wh": 4.003,
+      "alpha_min_wh_per_token": 0.0050525,
+      "alpha_max_wh_per_token": 0.0100075,
+      "alpha_mid_wh_per_token": 0.00753
+    },
+    "1k_in_1k_out": {
+      "model": "o3-mini-high",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 5.535,
+      "energy_max_wh": 8.195,
+      "alpha_min_wh_per_token": 0.0027675,
+      "alpha_max_wh_per_token": 0.0040975000000000004,
+      "alpha_mid_wh_per_token": 0.0034325000000000002
+    },
+    "10k_in_1.5k_out": {
+      "model": "o3-mini-high",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 4.206,
+      "energy_max_wh": 6.572,
+      "alpha_min_wh_per_token": 0.0003657391304347826,
+      "alpha_max_wh_per_token": 0.0005714782608695653,
+      "alpha_mid_wh_per_token": 0.0004686086956521739
+    }
+  },
+  "o3-mini": {
+    "100in_300out": {
+      "model": "o3-mini",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.659,
+      "energy_max_wh": 0.6890000000000001,
+      "alpha_min_wh_per_token": 0.0016475,
+      "alpha_max_wh_per_token": 0.0017225,
+      "alpha_mid_wh_per_token": 0.001685
+    },
+    "1k_in_1k_out": {
+      "model": "o3-mini",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 2.186,
+      "energy_max_wh": 2.66,
+      "alpha_min_wh_per_token": 0.001093,
+      "alpha_max_wh_per_token": 0.00133,
+      "alpha_mid_wh_per_token": 0.0012115
+    },
+    "10k_in_1.5k_out": {
+      "model": "o3-mini",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 3.3569999999999998,
+      "energy_max_wh": 3.693,
+      "alpha_min_wh_per_token": 0.00029191304347826085,
+      "alpha_max_wh_per_token": 0.0003211304347826087,
+      "alpha_mid_wh_per_token": 0.0003065217391304348
+    }
+  },
+  "o1": {
+    "100in_300out": {
+      "model": "o1",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 1.6139999999999999,
+      "energy_max_wh": 2.9219999999999997,
+      "alpha_min_wh_per_token": 0.0040349999999999995,
+      "alpha_max_wh_per_token": 0.007304999999999999,
+      "alpha_mid_wh_per_token": 0.00567
+    },
+    "1k_in_1k_out": {
+      "model": "o1",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 3.55,
+      "energy_max_wh": 4.544,
+      "alpha_min_wh_per_token": 0.0017749999999999999,
+      "alpha_max_wh_per_token": 0.0022719999999999997,
+      "alpha_mid_wh_per_token": 0.0020234999999999997
+    },
+    "10k_in_1.5k_out": {
+      "model": "o1",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 5.304,
+      "energy_max_wh": 7.058,
+      "alpha_min_wh_per_token": 0.00046121739130434785,
+      "alpha_max_wh_per_token": 0.0006137391304347826,
+      "alpha_mid_wh_per_token": 0.0005374782608695652
+    }
+  },
+  "o1-mini": {
+    "100in_300out": {
+      "model": "o1-mini",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.35300000000000004,
+      "energy_max_wh": 0.7170000000000001,
+      "alpha_min_wh_per_token": 0.0008825,
+      "alpha_max_wh_per_token": 0.0017925000000000003,
+      "alpha_mid_wh_per_token": 0.0013375000000000001
+    },
+    "1k_in_1k_out": {
+      "model": "o1-mini",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 1.142,
+      "energy_max_wh": 1.952,
+      "alpha_min_wh_per_token": 0.000571,
+      "alpha_max_wh_per_token": 0.000976,
+      "alpha_mid_wh_per_token": 0.0007735
+    },
+    "10k_in_1.5k_out": {
+      "model": "o1-mini",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 1.7870000000000001,
+      "energy_max_wh": 2.8470000000000004,
+      "alpha_min_wh_per_token": 0.0001553913043478261,
+      "alpha_max_wh_per_token": 0.0002475652173913044,
+      "alpha_mid_wh_per_token": 0.00020147826086956526
+    }
+  },
+  "claude-3.7-sonnet": {
+    "100in_300out": {
+      "model": "claude-3.7-sonnet",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.9099999999999999,
+      "energy_max_wh": 0.99,
+      "alpha_min_wh_per_token": 0.0022749999999999997,
+      "alpha_max_wh_per_token": 0.0024749999999999998,
+      "alpha_mid_wh_per_token": 0.0023749999999999995
+    },
+    "1k_in_1k_out": {
+      "model": "claude-3.7-sonnet",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 2.788,
+      "energy_max_wh": 3.19,
+      "alpha_min_wh_per_token": 0.0013939999999999998,
+      "alpha_max_wh_per_token": 0.001595,
+      "alpha_mid_wh_per_token": 0.0014945
+    },
+    "10k_in_1.5k_out": {
+      "model": "claude-3.7-sonnet",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 5.369000000000001,
+      "energy_max_wh": 5.973,
+      "alpha_min_wh_per_token": 0.00046686956521739136,
+      "alpha_max_wh_per_token": 0.000519391304347826,
+      "alpha_mid_wh_per_token": 0.0004931304347826087
+    }
+  },
+  "claude-3.5-sonnet": {
+    "100in_300out": {
+      "model": "claude-3.5-sonnet",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.907,
+      "energy_max_wh": 1.039,
+      "alpha_min_wh_per_token": 0.0022675,
+      "alpha_max_wh_per_token": 0.0025975,
+      "alpha_mid_wh_per_token": 0.0024324999999999998
+    },
+    "1k_in_1k_out": {
+      "model": "claude-3.5-sonnet",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 3.3819999999999997,
+      "energy_max_wh": 3.894,
+      "alpha_min_wh_per_token": 0.0016909999999999998,
+      "alpha_max_wh_per_token": 0.0019470000000000002,
+      "alpha_mid_wh_per_token": 0.0018189999999999999
+    },
+    "10k_in_1.5k_out": {
+      "model": "claude-3.5-sonnet",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 7.4270000000000005,
+      "energy_max_wh": 8.117,
+      "alpha_min_wh_per_token": 0.0006458260869565218,
+      "alpha_max_wh_per_token": 0.0007058260869565218,
+      "alpha_mid_wh_per_token": 0.0006758260869565219
+    }
+  },
+  "claude-3.5-haiku": {
+    "100in_300out": {
+      "model": "claude-3.5-haiku",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.9119999999999999,
+      "energy_max_wh": 1.038,
+      "alpha_min_wh_per_token": 0.00228,
+      "alpha_max_wh_per_token": 0.002595,
+      "alpha_mid_wh_per_token": 0.0024375
+    },
+    "1k_in_1k_out": {
+      "model": "claude-3.5-haiku",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 4.181,
+      "energy_max_wh": 4.747000000000001,
+      "alpha_min_wh_per_token": 0.0020905,
+      "alpha_max_wh_per_token": 0.0023735,
+      "alpha_mid_wh_per_token": 0.002232
+    },
+    "10k_in_1.5k_out": {
+      "model": "claude-3.5-haiku",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 7.672,
+      "energy_max_wh": 8.347999999999999,
+      "alpha_min_wh_per_token": 0.0006671304347826087,
+      "alpha_max_wh_per_token": 0.0007259130434782608,
+      "alpha_mid_wh_per_token": 0.0006965217391304348
+    }
+  },
+  "llama-3-8b": {
+    "100in_300out": {
+      "model": "llama-3-8b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.106,
+      "energy_max_wh": 0.11,
+      "alpha_min_wh_per_token": 0.000265,
+      "alpha_max_wh_per_token": 0.000275,
+      "alpha_mid_wh_per_token": 0.00027
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3-8b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.365,
+      "energy_max_wh": 0.375,
+      "alpha_min_wh_per_token": 0.0001825,
+      "alpha_max_wh_per_token": 0.0001875,
+      "alpha_mid_wh_per_token": 0.000185
+    }
+  },
+  "llama-3.70b": {
+    "100in_300out": {
+      "model": "llama-3.70b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.839,
+      "energy_max_wh": 0.883,
+      "alpha_min_wh_per_token": 0.0020975,
+      "alpha_max_wh_per_token": 0.0022075,
+      "alpha_mid_wh_per_token": 0.0021525
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.70b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 2.777,
+      "energy_max_wh": 2.965,
+      "alpha_min_wh_per_token": 0.0013885,
+      "alpha_max_wh_per_token": 0.0014824999999999999,
+      "alpha_mid_wh_per_token": 0.0014355
+    }
+  },
+  "llama-3.1-8b": {
+    "100in_300out": {
+      "model": "llama-3.1-8b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.044,
+      "energy_max_wh": 0.06,
+      "alpha_min_wh_per_token": 0.00010999999999999999,
+      "alpha_max_wh_per_token": 0.00015,
+      "alpha_mid_wh_per_token": 0.00013
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.1-8b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.15699999999999997,
+      "energy_max_wh": 0.187,
+      "alpha_min_wh_per_token": 7.849999999999998e-05,
+      "alpha_max_wh_per_token": 9.35e-05,
+      "alpha_mid_wh_per_token": 8.599999999999999e-05
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.1-8b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 0.415,
+      "energy_max_wh": 0.47100000000000003,
+      "alpha_min_wh_per_token": 3.608695652173913e-05,
+      "alpha_max_wh_per_token": 4.095652173913044e-05,
+      "alpha_mid_wh_per_token": 3.852173913043479e-05
+    }
+  },
+  "llama-3.1-70b": {
+    "100in_300out": {
+      "model": "llama-3.1-70b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 1.251,
+      "energy_max_wh": 1.291,
+      "alpha_min_wh_per_token": 0.0031274999999999996,
+      "alpha_max_wh_per_token": 0.0032275,
+      "alpha_mid_wh_per_token": 0.0031774999999999998
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.1-70b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 4.472,
+      "energy_max_wh": 4.578,
+      "alpha_min_wh_per_token": 0.002236,
+      "alpha_max_wh_per_token": 0.0022890000000000002,
+      "alpha_mid_wh_per_token": 0.0022625
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.1-70b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 18.623,
+      "energy_max_wh": 19.743,
+      "alpha_min_wh_per_token": 0.0016193913043478262,
+      "alpha_max_wh_per_token": 0.001716782608695652,
+      "alpha_mid_wh_per_token": 0.001668086956521739
+    }
+  },
+  "llama-3.1-405b": {
+    "100in_300out": {
+      "model": "llama-3.1-405b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 2.084,
+      "energy_max_wh": 2.368,
+      "alpha_min_wh_per_token": 0.00521,
+      "alpha_max_wh_per_token": 0.00592,
+      "alpha_mid_wh_per_token": 0.0055650000000000005
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.1-405b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 8.657,
+      "energy_max_wh": 9.427,
+      "alpha_min_wh_per_token": 0.0043285,
+      "alpha_max_wh_per_token": 0.0047135,
+      "alpha_mid_wh_per_token": 0.004521
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.1-405b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 24.676000000000002,
+      "energy_max_wh": 25.728,
+      "alpha_min_wh_per_token": 0.0021457391304347826,
+      "alpha_max_wh_per_token": 0.002237217391304348,
+      "alpha_mid_wh_per_token": 0.0021914782608695653
+    }
+  },
+  "llama-3.2-1b": {
+    "100in_300out": {
+      "model": "llama-3.2-1b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.096,
+      "energy_max_wh": 0.122,
+      "alpha_min_wh_per_token": 0.00024,
+      "alpha_max_wh_per_token": 0.000305,
+      "alpha_mid_wh_per_token": 0.0002725
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.2-1b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.317,
+      "energy_max_wh": 0.36700000000000005,
+      "alpha_min_wh_per_token": 0.0001585,
+      "alpha_max_wh_per_token": 0.00018350000000000002,
+      "alpha_mid_wh_per_token": 0.000171
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.2-1b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 0.49300000000000005,
+      "energy_max_wh": 0.611,
+      "alpha_min_wh_per_token": 4.286956521739131e-05,
+      "alpha_max_wh_per_token": 5.3130434782608694e-05,
+      "alpha_mid_wh_per_token": 4.8e-05
+    }
+  },
+  "llama-3.2-3b": {
+    "100in_300out": {
+      "model": "llama-3.2-3b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.13699999999999998,
+      "energy_max_wh": 0.149,
+      "alpha_min_wh_per_token": 0.0003425,
+      "alpha_max_wh_per_token": 0.0003725,
+      "alpha_mid_wh_per_token": 0.00035749999999999996
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.2-3b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.46199999999999997,
+      "energy_max_wh": 0.496,
+      "alpha_min_wh_per_token": 0.00023099999999999998,
+      "alpha_max_wh_per_token": 0.000248,
+      "alpha_mid_wh_per_token": 0.0002395
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.2-3b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 0.6869999999999999,
+      "energy_max_wh": 0.727,
+      "alpha_min_wh_per_token": 5.97391304347826e-05,
+      "alpha_max_wh_per_token": 6.321739130434783e-05,
+      "alpha_mid_wh_per_token": 6.147826086956522e-05
+    }
+  },
+  "llama-3.2-vision-11b": {
+    "100in_300out": {
+      "model": "llama-3.2-vision-11b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.056999999999999995,
+      "energy_max_wh": 0.099,
+      "alpha_min_wh_per_token": 0.0001425,
+      "alpha_max_wh_per_token": 0.0002475,
+      "alpha_mid_wh_per_token": 0.000195
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.2-vision-11b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.17099999999999999,
+      "energy_max_wh": 0.313,
+      "alpha_min_wh_per_token": 8.549999999999999e-05,
+      "alpha_max_wh_per_token": 0.0001565,
+      "alpha_mid_wh_per_token": 0.000121
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.2-vision-11b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 1.027,
+      "energy_max_wh": 1.147,
+      "alpha_min_wh_per_token": 8.930434782608695e-05,
+      "alpha_max_wh_per_token": 9.97391304347826e-05,
+      "alpha_mid_wh_per_token": 9.452173913043478e-05
+    }
+  },
+  "llama-3.2-vision-90b": {
+    "100in_300out": {
+      "model": "llama-3.2-vision-90b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 1.181,
+      "energy_max_wh": 1.2890000000000001,
+      "alpha_min_wh_per_token": 0.0029525000000000003,
+      "alpha_max_wh_per_token": 0.0032225000000000005,
+      "alpha_mid_wh_per_token": 0.0030875000000000004
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.2-vision-90b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 4.085999999999999,
+      "energy_max_wh": 4.982,
+      "alpha_min_wh_per_token": 0.0020429999999999997,
+      "alpha_max_wh_per_token": 0.002491,
+      "alpha_mid_wh_per_token": 0.002267
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.2-vision-90b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 6.072,
+      "energy_max_wh": 7.632000000000001,
+      "alpha_min_wh_per_token": 0.000528,
+      "alpha_max_wh_per_token": 0.0006636521739130435,
+      "alpha_mid_wh_per_token": 0.0005958260869565218
+    }
+  },
+  "llama-3.3-70b": {
+    "100in_300out": {
+      "model": "llama-3.3-70b",
+      "anchor": "100in_300out",
+      "input_tokens": 100,
+      "output_tokens": 300,
+      "total_tokens": 400,
+      "energy_min_wh": 0.214,
+      "energy_max_wh": 0.26,
+      "alpha_min_wh_per_token": 0.000535,
+      "alpha_max_wh_per_token": 0.00065,
+      "alpha_mid_wh_per_token": 0.0005924999999999999
+    },
+    "1k_in_1k_out": {
+      "model": "llama-3.3-70b",
+      "anchor": "1k_in_1k_out",
+      "input_tokens": 1000,
+      "output_tokens": 1000,
+      "total_tokens": 2000,
+      "energy_min_wh": 0.681,
+      "energy_max_wh": 0.839,
+      "alpha_min_wh_per_token": 0.00034050000000000004,
+      "alpha_max_wh_per_token": 0.0004195,
+      "alpha_mid_wh_per_token": 0.00038
+    },
+    "10k_in_1.5k_out": {
+      "model": "llama-3.3-70b",
+      "anchor": "10k_in_1.5k_out",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "total_tokens": 11500,
+      "energy_min_wh": 1.2590000000000001,
+      "energy_max_wh": 1.635,
+      "alpha_min_wh_per_token": 0.00010947826086956523,
+      "alpha_max_wh_per_token": 0.00014217391304347825,
+      "alpha_mid_wh_per_token": 0.00012582608695652173
+    }
+  }
+}
