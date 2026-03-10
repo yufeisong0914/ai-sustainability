@@ -14,6 +14,7 @@ ai_sustainability/
 ├── evaluation.py                   # Core calculation logic
 ├── table4_alpha_model.py           # One-time script: derives alpha ranges from Table 4 data
 ├── config/
+│   ├── table4_ranges.csv           # ← Source calibration data (model energy measurements by anchor)
 │   ├── location_params.csv         # ← Edit to add/update datacenter locations (PUE, WUE)
 │   └── baseline_params.csv         # ← Edit to update the Google baseline energy figure
 └── alpha_range_data/
