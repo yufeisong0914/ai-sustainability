@@ -29,7 +29,9 @@ Notes:
 #       "alpha_max_wh_per_token"
 #   ]
 
+import csv
 import json
+import os
 from dataclasses import dataclass
 from typing import Dict
 
@@ -105,29 +107,21 @@ def estimate_it_energy_interval(
 # =====================================================================
 # PUE: Power Usage Effectiveness (dimensionless)
 # WUE: Water Usage Effectiveness (L/kWh, direct on-site cooling water)
-# Source: Microsoft Datacenter Sustainability (2023–2024)
+# Loaded from: config/location_params.csv
+# To add or update a location, edit that CSV file — no code change needed.
 
-LOCATION_PARAMS: Dict[str, Dict[str, float]] = {
+def _load_location_params(csv_path: str) -> Dict[str, Dict[str, float]]:
+    params: Dict[str, Dict[str, float]] = {}
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            params[row["location"]] = {
+                "pue": float(row["pue"]),
+                "wue": float(row["wue"]),
+            }
+    return params
 
-    # ---- Global baseline ----
-    "global-average": {"pue": 1.16, "wue": 0.30},
-
-    # ---- United States ----
-    "arizona":    {"pue": 1.13, "wue": 1.52},
-    "illinois":   {"pue": 1.25, "wue": 0.52},
-    "iowa":       {"pue": 1.16, "wue": 0.10},
-    "texas":      {"pue": 1.28, "wue": 0.24},
-    "virginia":   {"pue": 1.14, "wue": 0.18},
-    "washington": {"pue": 1.16, "wue": 0.70},
-    "wyoming":    {"pue": 1.12, "wue": 0.16},
-
-    # ---- International ----
-    "singapore":   {"pue": 1.30, "wue": 0.02},
-    "ireland":     {"pue": 1.18, "wue": 0.02},
-    "netherlands": {"pue": 1.14, "wue": 0.04},
-    "sweden":      {"pue": 1.16, "wue": 0.05},
-    "poland":      {"pue": 1.19, "wue": 0.44},
-}
+_LOCATION_CSV = os.path.join(os.path.dirname(__file__), "config", "location_params.csv")
+LOCATION_PARAMS: Dict[str, Dict[str, float]] = _load_location_params(_LOCATION_CSV)
 
 
 # =====================================================================

@@ -1,3 +1,4 @@
+import csv
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,6 +10,21 @@ from evaluation import (
     ALPHA_TABLE
 )
 
+
+def _load_baseline_params(csv_path: str) -> dict:
+    """Load baseline energy parameters from CSV."""
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    # Index by name for easy lookup
+    return {row["name"]: row for row in rows}
+
+_BASELINE_PARAMS = _load_baseline_params("config/baseline_params.csv")
+_GOOGLE = _BASELINE_PARAMS["google-search"]
+GOOGLE_WH_PER_QUERY = float(_GOOGLE["energy_wh_per_query"])
+GOOGLE_LABEL = _GOOGLE["label"]
+GOOGLE_SOURCE = _GOOGLE["source"]
+GOOGLE_YEAR = _GOOGLE["year"]
+
 # =====================================================
 # Page Config
 # =====================================================
@@ -16,12 +32,12 @@ from evaluation import (
 st.set_page_config(page_title="LLM Footprint Comparator", layout="wide")
 
 st.title("🌍 LLM Footprint Comparator Dashboard")
-st.markdown("""
+st.markdown(f"""
 Compare three LLM inference workloads against a Google plain search baseline (non-AI control group).
 
 Baseline assumption:
 
-- Google Search = 0.3 Wh/query (Google, 2009)
+- {GOOGLE_LABEL} = {GOOGLE_WH_PER_QUERY} Wh/query ({GOOGLE_SOURCE}, {GOOGLE_YEAR})
 """)
 
 # =====================================================
@@ -139,13 +155,13 @@ with colC:
 
 # ---------------- Google Baseline ----------------
 with colG:
-    st.subheader("Baseline (Google)")
+    st.subheader(f"Baseline ({GOOGLE_LABEL})")
     searches = st.number_input("# Searches", 1, 500, 10)
 
     google_energy = Interval(
-        lo=0.3 * searches,
-        mid=0.3 * searches,
-        hi=0.3 * searches
+        lo=GOOGLE_WH_PER_QUERY * searches,
+        mid=GOOGLE_WH_PER_QUERY * searches,
+        hi=GOOGLE_WH_PER_QUERY * searches,
     )
 
     google_loc = st.selectbox(
