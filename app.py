@@ -196,6 +196,9 @@ def pack(label, interval):
     }
 
 
+def kwh_to_wh(interval: Interval) -> Interval:
+    return Interval(lo=interval.lo * 1000, mid=interval.mid * 1000, hi=interval.hi * 1000)
+
 df_energy = pd.DataFrame([
     pack("Scenario A", rA["energy_it_wh"]),
     pack("Scenario B", rB["energy_it_wh"]),
@@ -204,17 +207,20 @@ df_energy = pd.DataFrame([
 ])
 
 df_electricity = pd.DataFrame([
-    pack("Scenario A", rA["electricity_dc_kwh"]),
-    pack("Scenario B", rB["electricity_dc_kwh"]),
-    pack("Scenario C", rC["electricity_dc_kwh"]),
-    pack("Google Search", google_electricity),
+    pack("Scenario A", kwh_to_wh(rA["electricity_dc_kwh"])),
+    pack("Scenario B", kwh_to_wh(rB["electricity_dc_kwh"])),
+    pack("Scenario C", kwh_to_wh(rC["electricity_dc_kwh"])),
+    pack("Google Search", kwh_to_wh(google_electricity)),
 ])
 
+def l_to_ml(interval: Interval) -> Interval:
+    return Interval(lo=interval.lo * 1000, mid=interval.mid * 1000, hi=interval.hi * 1000)
+
 df_water = pd.DataFrame([
-    pack("Scenario A", rA["water_onsite_l"]),
-    pack("Scenario B", rB["water_onsite_l"]),
-    pack("Scenario C", rC["water_onsite_l"]),
-    pack("Google Search", google_water),
+    pack("Scenario A", l_to_ml(rA["water_onsite_l"])),
+    pack("Scenario B", l_to_ml(rB["water_onsite_l"])),
+    pack("Scenario C", l_to_ml(rC["water_onsite_l"])),
+    pack("Google Search", l_to_ml(google_water)),
 ])
 
 # =====================================================
@@ -231,11 +237,11 @@ with c1:
     st.pyplot(fig1)
 
 with c2:
-    fig2 = plot_bars_with_labels(df_electricity, "Data Center Electricity Consumption (kWh)", "kWh")
+    fig2 = plot_bars_with_labels(df_electricity, "Data Center Electricity Consumption (Wh)", "Wh")
     st.pyplot(fig2)
 
 with c3:
-    fig3 = plot_bars_with_labels(df_water, "Cooling Water Consumption (L)", "Liters")
+    fig3 = plot_bars_with_labels(df_water, "Cooling Water Consumption (mL)", "mL")
     st.pyplot(fig3)
 
 # =====================================================
@@ -247,8 +253,8 @@ st.subheader("Interval Output Table")
 
 df_all = pd.concat([
     df_energy.assign(Metric="IT Equipment Electricity Consumption (Wh)"),
-    df_electricity.assign(Metric="Data Center Electricity Consumption (kWh)"),
-    df_water.assign(Metric="Cooling Water Consumption (L)")
+    df_electricity.assign(Metric="Data Center Electricity Consumption (Wh)"),
+    df_water.assign(Metric="Cooling Water Consumption (mL)")
 ])
 
 st.dataframe(df_all, use_container_width=True)

@@ -68,7 +68,7 @@ The IT energy is scaled by **PUE** (Power Usage Effectiveness) to account for
 datacenter overhead (cooling systems, power distribution losses, lighting, etc.):
 
 ```
-E_DC (kWh) = (E_IT_Wh / 1000) × PUE
+E_DC (Wh) = E_IT_Wh × PUE
 ```
 
 PUE is dimensionless. A PUE of 1.0 would mean 100% of electricity goes to IT
