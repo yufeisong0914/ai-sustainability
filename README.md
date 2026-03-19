@@ -25,6 +25,55 @@ ai_sustainability/
 
 ---
 
+## Dashboard
+
+The app has two tabs.
+
+### ⚙️ Manual Input
+
+Enter token counts and model parameters directly for up to three scenarios plus a Google Search baseline. Results are shown as three side-by-side bar charts (IT energy, datacenter electricity, cooling water) with uncertainty intervals, and a downloadable results table.
+
+### 📂 Upload CSV
+
+Upload a single CSV file containing test results for multiple tools. Each row is one query; token columns must follow the naming convention `ToolName_in` / `ToolName_out` (e.g. `Consensus_in`, `Consensus_out`).
+
+**Required columns**
+
+| Column | Description |
+|---|---|
+| `ToolName_in` | Input token count for that tool |
+| `ToolName_out` | Output token count for that tool |
+
+**Optional columns**
+
+| Column | Description |
+|---|---|
+| `ID` | Query identifier |
+| `prompt` | Query text (shown truncated in charts) |
+| `T0 (any output)` | Time to first output (s) |
+| `T1 (first byte)` | Time to first byte (s) |
+| `T2 (full-length)` | Time to full response (s) |
+| `citation_total` | Total citations retrieved |
+| `citation_used` | Citations actually used in response |
+| `word_count_in` | Input word count |
+| `word_count_out` | Output word count |
+
+**Example CSV format**
+
+```
+ID,prompt,Consensus_in,Consensus_out,Keenious_in,Keenious_out,Scopusai_in,Scopusai_out
+1,What are recent advances in X?,16,1249,16,181,16,1393
+2,How does Y affect Z?,19,849,19,134,19,869
+```
+
+After uploading, select a model per tool (shared anchor and location), then the dashboard generates:
+
+1. **Summary Comparison** — mean IT energy, DC electricity, and cooling water per query for each tool vs. the Google baseline.
+2. **Per-Scenario Breakdown** — for each tool: per-query bar charts for all three footprint metrics, plus KPI metrics and a raw data table.
+3. **Per-Prompt Cross-Tool Comparison** — select any individual query to see all three footprint metrics side by side across tools.
+
+---
+
 ## Calculation Pipeline
 
 ### Step 1 — Per-token energy coefficient (alpha)
@@ -180,6 +229,7 @@ To add a new model or update energy measurements:
 ## Running the Dashboard
 
 ```bash
+pip install -r requirements.txt
 streamlit run app.py
 ```
 
@@ -199,3 +249,6 @@ streamlit run app.py
 - **On-site water only:** WUE captures direct evaporative cooling at the
   datacenter. Embodied water (manufacturing, construction) and indirect water
   (power generation cooling) are excluded.
+- **Per-query distributions with small samples:** The CSV upload mode computes
+  footprint for each individual query. With small test sets (e.g. 5 queries),
+  summary statistics should be interpreted with caution.
