@@ -41,6 +41,7 @@ Upload a single CSV file containing test results for multiple tools. Each row is
 
 | Column | Description |
 |---|---|
+| `prompt` | Query text (shown truncated in charts) |
 | `ToolName_in` | Input token count for that tool |
 | `ToolName_out` | Output token count for that tool |
 
@@ -49,7 +50,6 @@ Upload a single CSV file containing test results for multiple tools. Each row is
 | Column | Description |
 |---|---|
 | `ID` | Query identifier |
-| `prompt` | Query text (shown truncated in charts) |
 | `T0 (any output)` | Time to first output (s) |
 | `T1 (first byte)` | Time to first byte (s) |
 | `T2 (full-length)` | Time to full response (s) |
