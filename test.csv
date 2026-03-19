@@ -1,0 +1,6 @@
+ID,prompt,Consensus_in,Consensus_out,Keenious_in,Keenious_out,Scopusai_in,Scopusai_out
+1,What are the recent advancements in malicious domain and subdomain detection?,16,1249,16,181,16,1393
+2,"What method performs the best on acc, sen, sp, DICE, and IoU metrics?",19,849,19,134,19,869
+3,How does hydrogen gas emanation affect the mineral composition of soils?,16,796,16,220,16,871
+4,has anyone studied how to inverse from the embedding vector of a document and only output information about a specific query?,30,960,30,263,30,894
+5,Can you suggest latest researches that optimizes each agent in multi agent LLM using reinforcement learning?,23,1713,23,166,23,1074
