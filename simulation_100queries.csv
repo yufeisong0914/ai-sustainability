@@ -1,0 +1,101 @@
+ID,prompt,Consensus_in,Consensus_out,Keenious_in,Keenious_out,Scopusai_in,Scopusai_out
+1,What are the recent advancements in malicious domain detection?,30,728,10,240,17,1257
+2,How does federated learning preserve data privacy?,14,709,27,144,28,1664
+3,Summarize energy consumption trends in large language models.,11,561,12,211,17,1834
+4,What methods exist for carbon footprint estimation in AI?,29,554,27,201,30,1916
+5,Explain transformer architecture and its variants.,23,951,24,242,10,1126
+6,How do graph neural networks handle heterogeneous data?,23,1196,18,179,16,1489
+7,What is the state of quantum computing in 2024?,13,689,22,149,21,1504
+8,Describe retrieval-augmented generation (RAG) techniques.,29,1041,11,335,27,1055
+9,How can AI accelerate drug discovery pipelines?,22,661,27,250,30,1540
+10,What are the main benchmarks for evaluating LLM reasoning?,28,893,12,123,17,1392
+11,What are the recent advancements in malicious domain detection?,12,976,13,294,18,1728
+12,How does federated learning preserve data privacy?,30,1247,15,289,21,1229
+13,Summarize energy consumption trends in large language models.,18,646,29,187,27,1301
+14,What methods exist for carbon footprint estimation in AI?,15,1446,22,238,30,1940
+15,Explain transformer architecture and its variants.,17,1164,11,217,11,1446
+16,How do graph neural networks handle heterogeneous data?,22,1048,12,208,28,1444
+17,What is the state of quantum computing in 2024?,16,1522,22,334,14,1342
+18,Describe retrieval-augmented generation (RAG) techniques.,14,1005,27,375,18,1997
+19,How can AI accelerate drug discovery pipelines?,23,1695,22,285,17,1083
+20,What are the main benchmarks for evaluating LLM reasoning?,26,1510,12,124,13,1113
+21,What are the recent advancements in malicious domain detection?,30,827,23,132,22,1581
+22,How does federated learning preserve data privacy?,29,1458,26,228,27,823
+23,Summarize energy consumption trends in large language models.,13,1599,18,274,13,1401
+24,What methods exist for carbon footprint estimation in AI?,23,823,24,101,18,1825
+25,Explain transformer architecture and its variants.,15,1539,13,252,30,1839
+26,How do graph neural networks handle heterogeneous data?,29,907,14,291,15,1904
+27,What is the state of quantum computing in 2024?,26,501,29,265,25,839
+28,Describe retrieval-augmented generation (RAG) techniques.,13,1243,19,222,11,1293
+29,How can AI accelerate drug discovery pipelines?,28,661,12,348,12,1890
+30,What are the main benchmarks for evaluating LLM reasoning?,14,762,25,381,15,1342
+31,What are the recent advancements in malicious domain detection?,26,1742,23,208,27,1211
+32,How does federated learning preserve data privacy?,19,1317,30,291,24,1859
+33,Summarize energy consumption trends in large language models.,24,747,17,215,12,1492
+34,What methods exist for carbon footprint estimation in AI?,10,1704,27,217,28,1251
+35,Explain transformer architecture and its variants.,10,645,30,130,17,938
+36,How do graph neural networks handle heterogeneous data?,11,1176,12,363,17,1370
+37,What is the state of quantum computing in 2024?,25,938,27,167,28,1980
+38,Describe retrieval-augmented generation (RAG) techniques.,25,997,25,308,16,993
+39,How can AI accelerate drug discovery pipelines?,13,1382,21,316,23,1756
+40,What are the main benchmarks for evaluating LLM reasoning?,11,701,11,306,20,1023
+41,What are the recent advancements in malicious domain detection?,17,892,16,374,24,1087
+42,How does federated learning preserve data privacy?,23,875,18,336,17,954
+43,Summarize energy consumption trends in large language models.,24,1627,13,125,30,1907
+44,What methods exist for carbon footprint estimation in AI?,10,691,17,185,23,1794
+45,Explain transformer architecture and its variants.,25,937,22,130,15,1576
+46,How do graph neural networks handle heterogeneous data?,10,1299,18,332,19,1666
+47,What is the state of quantum computing in 2024?,27,1496,14,197,19,1245
+48,Describe retrieval-augmented generation (RAG) techniques.,11,1686,27,131,20,917
+49,How can AI accelerate drug discovery pipelines?,11,1696,25,357,26,1122
+50,What are the main benchmarks for evaluating LLM reasoning?,11,1540,12,195,12,939
+51,What are the recent advancements in malicious domain detection?,17,1326,13,391,17,1985
+52,How does federated learning preserve data privacy?,29,581,29,141,23,1995
+53,Summarize energy consumption trends in large language models.,28,1570,20,233,16,1443
+54,What methods exist for carbon footprint estimation in AI?,17,1043,22,167,30,1414
+55,Explain transformer architecture and its variants.,24,1147,12,104,24,1953
+56,How do graph neural networks handle heterogeneous data?,13,650,27,209,26,1343
+57,What is the state of quantum computing in 2024?,14,1214,12,225,21,1383
+58,Describe retrieval-augmented generation (RAG) techniques.,15,1397,27,254,29,1883
+59,How can AI accelerate drug discovery pipelines?,10,1635,19,153,14,1341
+60,What are the main benchmarks for evaluating LLM reasoning?,13,719,27,179,18,1377
+61,What are the recent advancements in malicious domain detection?,29,931,20,204,30,1340
+62,How does federated learning preserve data privacy?,26,1500,18,126,12,1667
+63,Summarize energy consumption trends in large language models.,18,590,10,270,14,1336
+64,What methods exist for carbon footprint estimation in AI?,15,1404,27,318,27,819
+65,Explain transformer architecture and its variants.,13,654,14,379,11,1556
+66,How do graph neural networks handle heterogeneous data?,28,1631,14,320,14,885
+67,What is the state of quantum computing in 2024?,19,1246,11,283,16,1311
+68,Describe retrieval-augmented generation (RAG) techniques.,13,1224,27,308,29,1116
+69,How can AI accelerate drug discovery pipelines?,17,832,15,311,10,1167
+70,What are the main benchmarks for evaluating LLM reasoning?,20,1343,17,236,15,1021
+71,What are the recent advancements in malicious domain detection?,22,579,25,213,16,1742
+72,How does federated learning preserve data privacy?,21,1125,17,214,10,1195
+73,Summarize energy consumption trends in large language models.,22,1172,18,135,18,1519
+74,What methods exist for carbon footprint estimation in AI?,30,1543,22,374,20,856
+75,Explain transformer architecture and its variants.,13,1034,15,397,18,878
+76,How do graph neural networks handle heterogeneous data?,13,1721,23,276,20,1693
+77,What is the state of quantum computing in 2024?,29,1547,13,297,28,1189
+78,Describe retrieval-augmented generation (RAG) techniques.,18,590,23,100,26,1902
+79,How can AI accelerate drug discovery pipelines?,16,1245,23,135,20,1442
+80,What are the main benchmarks for evaluating LLM reasoning?,13,1115,26,258,23,1468
+81,What are the recent advancements in malicious domain detection?,22,1105,27,165,16,1661
+82,How does federated learning preserve data privacy?,22,856,29,391,19,1631
+83,Summarize energy consumption trends in large language models.,27,500,19,246,16,1680
+84,What methods exist for carbon footprint estimation in AI?,28,1742,30,264,24,1704
+85,Explain transformer architecture and its variants.,24,937,26,342,15,973
+86,How do graph neural networks handle heterogeneous data?,19,1555,30,271,12,1281
+87,What is the state of quantum computing in 2024?,19,960,16,175,10,894
+88,Describe retrieval-augmented generation (RAG) techniques.,17,1473,29,137,24,1648
+89,How can AI accelerate drug discovery pipelines?,30,1678,16,296,25,1618
+90,What are the main benchmarks for evaluating LLM reasoning?,17,802,30,102,13,1670
+91,What are the recent advancements in malicious domain detection?,17,860,26,337,11,1941
+92,How does federated learning preserve data privacy?,17,748,24,168,24,1887
+93,Summarize energy consumption trends in large language models.,27,1719,20,326,29,1833
+94,What methods exist for carbon footprint estimation in AI?,23,1622,24,181,25,1721
+95,Explain transformer architecture and its variants.,18,1006,30,241,26,1792
+96,How do graph neural networks handle heterogeneous data?,30,989,18,325,12,1385
+97,What is the state of quantum computing in 2024?,17,1056,20,263,27,965
+98,Describe retrieval-augmented generation (RAG) techniques.,14,808,17,296,14,1238
+99,How can AI accelerate drug discovery pipelines?,12,1349,23,269,27,1754
+100,What are the main benchmarks for evaluating LLM reasoning?,23,627,16,315,22,1996
