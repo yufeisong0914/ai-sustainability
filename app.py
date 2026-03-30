@@ -36,6 +36,19 @@ st.caption(
     f"({GOOGLE_SOURCE}, {GOOGLE_YEAR})"
 )
 
+# ── Global estimate selector ──────────────────────────────────────────────────
+with st.sidebar:
+    st.header("Display settings")
+    ESTIMATE = st.radio(
+        "Estimate",
+        options=["Low", "Mid", "High"],
+        index=1,
+        help=(
+            "**Mid** shows the central estimate of the alpha (Wh/token) coefficient. "
+            "**Low / High** shows the conservative or upper-bound estimate respectively."
+        ),
+    )
+
 models    = sorted(ALPHA_TABLE.keys())
 anchors   = sorted(ALPHA_TABLE[models[0]].keys())
 locations = list(LOCATION_PARAMS.keys())
@@ -149,35 +162,41 @@ def _clean_h(ax):
 # ──────────────────────────────────────────────────────────────────────────────
 # entries: list of (label, mid, lo, hi)
 
-def plot_summary_bars(entries, title, ylabel, note=""):
+def plot_summary_bars(entries, title, ylabel, note="", estimate="Mid"):
     fig, ax = plt.subplots(figsize=(5.5, 4.2))
     labels = [e[0] for e in entries]
     mids   = [e[1] for e in entries]
     los    = [e[2] for e in entries]
     his    = [e[3] for e in entries]
-    lower  = [m - l for m, l in zip(mids, los)]
-    upper  = [h - m for h, m in zip(his, mids)]
+
+    if estimate == "Low":
+        vals = los
+    elif estimate == "High":
+        vals = his
+    else:
+        vals = mids
 
     colors = PALETTE[: len(entries) - 1] + [GOOGLE_COLOR]
-    bars = ax.bar(
-        range(len(labels)), mids,
-        yerr=[lower, upper], capsize=7,
-        color=colors, alpha=0.85,
-        error_kw={"elinewidth": 1.4, "ecolor": "#555555"},
-    )
-    max_up = max(upper) if upper else 0
-    for bar, m in zip(bars, mids):
+    bars = ax.bar(range(len(labels)), vals, color=colors, alpha=0.85)
+
+    max_up = 0
+    for bar, v in zip(bars, vals):
         ax.text(
             bar.get_x() + bar.get_width() / 2,
             bar.get_height() + max_up * 0.06 + 1e-9,
-            f"{m:.4f}", ha="center", va="bottom", fontsize=8, fontweight="bold",
+            f"{v:.4f}", ha="center", va="bottom", fontsize=8, fontweight="bold",
         )
     ax.set_xticks(range(len(labels)))
     ax.set_xticklabels(labels, rotation=22, ha="right", fontsize=9)
     ax.set_title(title, fontsize=11, fontweight="bold", pad=9)
     ax.set_ylabel(ylabel, fontsize=9)
+    xlabel_parts = []
     if note:
-        ax.set_xlabel(note, fontsize=7.5, color="#888888")
+        xlabel_parts.append(note)
+    if estimate != "Mid":
+        xlabel_parts.append(f"showing {estimate.lower()} estimate")
+    if xlabel_parts:
+        ax.set_xlabel("  ·  ".join(xlabel_parts), fontsize=7.5, color="#888888")
     _clean(ax)
     plt.tight_layout()
     return fig
@@ -311,26 +330,47 @@ def chart_wordcount_energy(df, name, color):
     return fig
 
 
-def chart_perquery_bar(df, name, color):
-    """Horizontal bar: per-query IT energy sorted ascending."""
-    df_s  = df.sort_values("energy_mid").reset_index(drop=True)
-    ids   = [f"Q{int(i)}" for i in df_s["ID"]] if df_s["ID"].notna().all() \
-            else [f"Q{i+1}" for i in df_s.index]
-    lower = (df_s["energy_mid"] - df_s["energy_lo"]).tolist()
-    upper = (df_s["energy_hi"]  - df_s["energy_mid"]).tolist()
+_LARGE_N = 25   # threshold above which compact chart variants kick in
 
-    fig, ax = plt.subplots(figsize=(5.5, max(3.2, len(df_s) * 0.38)))
-    bars = ax.barh(range(len(ids)), df_s["energy_mid"],
-                   xerr=[lower, upper], color=color, alpha=0.78, capsize=4,
-                   error_kw={"elinewidth": 1, "ecolor": "#555555"})
-    # Value labels at end of each bar
-    for bar, hi, m in zip(bars, upper, df_s["energy_mid"]):
-        ax.text(bar.get_width() + hi + ax.get_xlim()[1] * 0.01,
+
+def chart_perquery_bar(df, name, color, estimate="Mid"):
+    """Horizontal bar (small N) or sorted dot plot (large N) of per-query IT energy."""
+    val_col = {"Low": "energy_lo", "High": "energy_hi"}.get(estimate, "energy_mid")
+    df_s = df.sort_values(val_col).reset_index(drop=True)
+    n    = len(df_s)
+
+    if n > _LARGE_N:
+        # ── Sorted dot plot (quantile-style) ─────────────────────────────────
+        fig, ax = plt.subplots(figsize=(5.5, 3.8))
+        ranks = np.arange(1, n + 1)
+        ax.scatter(ranks, df_s[val_col], color=color, s=18, alpha=0.75,
+                   edgecolors="none", zorder=3, label=estimate)
+        ax.plot(ranks, df_s[val_col], color=color, linewidth=0.6, alpha=0.4)
+        mean_v = df_s[val_col].mean()
+        ax.axhline(mean_v, color="red", linestyle="--", linewidth=1.5,
+                   label=f"mean = {mean_v:.5f}")
+        ax.set_xlabel("Query rank (sorted ascending)", fontsize=9)
+        ax.set_ylabel("IT Energy (Wh)", fontsize=9)
+        ax.set_title(f"{name}: Per-Query Energy — sorted [{estimate}]",
+                     fontsize=10, fontweight="bold")
+        ax.legend(fontsize=7.5)
+        _clean(ax)
+        plt.tight_layout()
+        return fig
+
+    # ── Original horizontal bar chart (small N) ───────────────────────────────
+    ids = [f"Q{int(i)}" for i in df_s["ID"]] if df_s["ID"].notna().all() \
+          else [f"Q{i+1}" for i in df_s.index]
+    fig, ax = plt.subplots(figsize=(5.5, max(3.2, n * 0.38)))
+    bars = ax.barh(range(n), df_s[val_col], color=color, alpha=0.78)
+    for bar, v in zip(bars, df_s[val_col]):
+        ax.text(bar.get_width() + ax.get_xlim()[1] * 0.01,
                 bar.get_y() + bar.get_height() / 2,
-                f"{m:.5f}", va="center", ha="left", fontsize=7.5, fontweight="bold")
-    ax.set_yticks(range(len(ids)))
+                f"{v:.5f}", va="center", ha="left", fontsize=7.5, fontweight="bold")
+    ax.set_yticks(range(n))
     ax.set_yticklabels(ids, fontsize=8)
-    ax.set_title(f"{name}: Per-Query Energy (sorted)", fontsize=10, fontweight="bold")
+    ax.set_title(f"{name}: Per-Query Energy (sorted) [{estimate}]",
+                 fontsize=10, fontweight="bold")
     ax.set_xlabel("IT Energy (Wh)", fontsize=9)
     _clean_h(ax)
     plt.tight_layout()
@@ -370,40 +410,63 @@ def chart_cumulative_energy(df, name, color):
     return fig
 
 
-def chart_three_distributions(df, name, color):
-    """3 bar charts side-by-side (one bar per query): IT energy, DC electricity, water."""
-    fig, axes = plt.subplots(1, 3, figsize=(13, 3.8))
+def chart_three_distributions(df, name, color, estimate="Mid"):
+    """3 panels (IT energy, DC electricity, water).
+    Small N (≤25): one bar per query.  Large N: line + shaded uncertainty band.
+    """
     metrics = [
         ("energy_mid", "energy_lo", "energy_hi", "IT Energy (Wh)"),
         ("elec_mid",   "elec_lo",   "elec_hi",   "DC Electricity (Wh)"),
         ("water_mid",  "water_lo",  "water_hi",  "Cooling Water (mL)"),
     ]
+    col_idx = {"Low": 1, "Mid": 0, "High": 2}[estimate]
+    n = len(df)
+
+    if n > _LARGE_N:
+        # ── Line + shaded band (large N) ──────────────────────────────────────
+        fig, axes = plt.subplots(1, 3, figsize=(13, 3.8))
+        xs = np.arange(1, n + 1)
+        for ax, (mid_col, lo_col, hi_col, label) in zip(axes, metrics):
+            val_col = [mid_col, lo_col, hi_col][col_idx]
+            ax.plot(xs, df[val_col].values, color=color, linewidth=1.4,
+                    alpha=0.85, label=estimate)
+            mean_v = df[val_col].mean()
+            ax.axhline(mean_v, color="red", linestyle="--", linewidth=1.5,
+                       label=f"mean = {mean_v:.5f}")
+            ax.set_xlabel("Query #", fontsize=9)
+            ax.set_ylabel(label, fontsize=9)
+            ax.set_title(label, fontsize=10, fontweight="bold")
+            ax.legend(fontsize=7.5, loc="upper left")
+            _clean(ax)
+        fig.suptitle(f"{name}: Per-Query Values [{estimate}]",
+                     fontsize=11, fontweight="bold")
+        plt.tight_layout()
+        return fig
+
+    # ── Bar chart (small N) ───────────────────────────────────────────────────
+    fig, axes = plt.subplots(1, 3, figsize=(13, 3.8))
     ids = [f"Q{int(i)}" for i in df["ID"]] if df["ID"].notna().all() \
           else [f"Q{i+1}" for i in df.index]
 
     for ax, (mid_col, lo_col, hi_col, label) in zip(axes, metrics):
-        lower = (df[mid_col] - df[lo_col]).tolist()
-        upper = (df[hi_col]  - df[mid_col]).tolist()
-        x = np.arange(len(ids))
-        bars = ax.bar(x, df[mid_col], yerr=[lower, upper], color=color, alpha=0.75,
-                      edgecolor="white", linewidth=0.8, capsize=4,
-                      error_kw={"elinewidth": 1, "ecolor": "#555555"})
-        mean_v = df[mid_col].mean()
+        val_col = [mid_col, lo_col, hi_col][col_idx]
+        x = np.arange(n)
+        bars = ax.bar(x, df[val_col], color=color, alpha=0.75,
+                      edgecolor="white", linewidth=0.8)
+        mean_v = df[val_col].mean()
         ax.axhline(mean_v, color="red", linestyle="--", linewidth=1.5,
                    label=f"mean = {mean_v:.5f}")
-        # Value labels on each bar
-        max_up = max(upper) if upper else 0
-        for bar, u, m in zip(bars, upper, df[mid_col]):
+        for bar, v in zip(bars, df[val_col]):
             ax.text(bar.get_x() + bar.get_width() / 2,
-                    bar.get_height() + u + max_up * 0.03 + 1e-12,
-                    f"{m:.5f}", ha="center", va="bottom", fontsize=7, fontweight="bold")
+                    bar.get_height() + 1e-12,
+                    f"{v:.5f}", ha="center", va="bottom", fontsize=7, fontweight="bold")
         ax.set_xticks(x)
         ax.set_xticklabels(ids, rotation=45, fontsize=8)
         ax.set_title(label, fontsize=10, fontweight="bold")
         ax.set_ylabel("Value", fontsize=9)
         ax.legend(fontsize=7.5, loc="upper left")
         _clean(ax)
-    fig.suptitle(f"{name}: Per-Query Values", fontsize=11, fontweight="bold")
+    fig.suptitle(f"{name}: Per-Query Values [{estimate}]", fontsize=11, fontweight="bold")
     plt.tight_layout()
     return fig
 
@@ -526,11 +589,14 @@ with tab_manual:
     st.subheader("Comparison Results")
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.pyplot(plot_summary_bars(energy_ents, "IT Equipment Energy (Wh)", "Wh"))
+        st.pyplot(plot_summary_bars(energy_ents, "IT Equipment Energy (Wh)", "Wh",
+                                    estimate=ESTIMATE))
     with c2:
-        st.pyplot(plot_summary_bars(elec_ents, "Data Center Electricity (Wh)", "Wh"))
+        st.pyplot(plot_summary_bars(elec_ents, "Data Center Electricity (Wh)", "Wh",
+                                    estimate=ESTIMATE))
     with c3:
-        st.pyplot(plot_summary_bars(water_ents, "Cooling Water (mL)", "mL"))
+        st.pyplot(plot_summary_bars(water_ents, "Cooling Water (mL)", "mL",
+                                    estimate=ESTIMATE))
 
     st.divider()
     st.subheader("Interval Output Table")
@@ -658,13 +724,16 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
         with s1:
             st.pyplot(plot_summary_bars(csv_energy_ents,
                 "IT Equipment Energy (Wh)", "Wh / query",
-                note="error bars = model uncertainty (alpha lo–hi)"))
+                note="error bars = model uncertainty (alpha lo–hi)" if ESTIMATE == "Mid" else "",
+                estimate=ESTIMATE))
         with s2:
             st.pyplot(plot_summary_bars(csv_elec_ents,
-                "Data Center Electricity (Wh)", "Wh / query"))
+                "Data Center Electricity (Wh)", "Wh / query",
+                estimate=ESTIMATE))
         with s3:
             st.pyplot(plot_summary_bars(csv_water_ents,
-                "Cooling Water (mL)", "mL / query"))
+                "Cooling Water (mL)", "mL / query",
+                estimate=ESTIMATE))
 
         # ── SECTION 2: Per-scenario breakdowns ────────────────────────────────
         st.divider()
@@ -688,7 +757,7 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
 
                 # ── Row 0: IT / DC electricity / Water distributions ──────────
                 st.markdown("**Footprint Distributions (IT · DC Electricity · Water)**")
-                st.pyplot(chart_three_distributions(df_s, sname, color))
+                st.pyplot(chart_three_distributions(df_s, sname, color, estimate=ESTIMATE))
 
                 # ── Raw data table ────────────────────────────────────────────
                 with st.expander("📋 Raw query data", expanded=False):
@@ -737,19 +806,20 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
                                         PALETTE[j % len(PALETTE)]))
 
             xs     = range(len(cmp_entries))
-            mids   = [e[1] for e in cmp_entries]
-            lowers = [e[1] - e[2] for e in cmp_entries]
-            uppers = [e[3] - e[1] for e in cmp_entries]
             colors = [e[4] for e in cmp_entries]
 
-            bars = ax.bar(xs, mids, yerr=[lowers, uppers],
-                          color=colors, alpha=0.82, capsize=7,
-                          error_kw={"elinewidth": 1.4, "ecolor": "#555555"})
-            max_up = max(uppers) if uppers else 0
-            for bar, m in zip(bars, mids):
+            if ESTIMATE == "Low":
+                vals = [e[2] for e in cmp_entries]
+            elif ESTIMATE == "High":
+                vals = [e[3] for e in cmp_entries]
+            else:
+                vals = [e[1] for e in cmp_entries]
+
+            bars = ax.bar(xs, vals, color=colors, alpha=0.82)
+            for bar, v in zip(bars, vals):
                 ax.text(bar.get_x() + bar.get_width() / 2,
-                        bar.get_height() + max_up * 0.05 + 1e-12,
-                        f"{m:.5f}", ha="center", va="bottom",
+                        bar.get_height() + 1e-12,
+                        f"{v:.5f}", ha="center", va="bottom",
                         fontsize=8, fontweight="bold")
 
             ax.set_xticks(list(xs))
@@ -757,7 +827,9 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
             ax.set_ylabel(metric_label, fontsize=9)
             ax.set_title(metric_label, fontsize=10, fontweight="bold")
 
-        fig_cmp.suptitle(prompt_options[sel_id], fontsize=10, fontweight="bold")
+        fig_cmp.suptitle(
+            f"{prompt_options[sel_id]}  [{ESTIMATE}]", fontsize=10, fontweight="bold"
+        )
         plt.tight_layout()
         st.pyplot(fig_cmp)
         plt.close(fig_cmp)
