@@ -3,6 +3,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import altair as alt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from evaluation import (
     estimate_footprint_interval,
@@ -36,18 +39,7 @@ st.caption(
     f"({GOOGLE_SOURCE}, {GOOGLE_YEAR})"
 )
 
-# ── Global estimate selector ──────────────────────────────────────────────────
-with st.sidebar:
-    st.header("Display settings")
-    ESTIMATE = st.radio(
-        "Estimate",
-        options=["Low", "Mid", "High"],
-        index=1,
-        help=(
-            "**Mid** shows the central estimate of the alpha (Wh/token) coefficient. "
-            "**Low / High** shows the conservative or upper-bound estimate respectively."
-        ),
-    )
+ESTIMATE = "Mid"
 
 models    = sorted(ALPHA_TABLE.keys())
 anchors   = sorted(ALPHA_TABLE[models[0]].keys())
@@ -103,6 +95,7 @@ def process_csv(df_raw: pd.DataFrame, model: str, anchor: str, location: str) ->
         prompt_str = str(row.get("prompt", ""))
         rows.append({
             "ID":           row.get("ID", ""),
+            "prompt":       prompt_str,
             "prompt_short": (prompt_str[:55] + "…") if len(prompt_str) > 55 else prompt_str,
             "token_in":     tin,
             "token_out":    tout,
@@ -163,30 +156,66 @@ def _clean_h(ax):
 # entries: list of (label, mid, lo, hi)
 
 def plot_summary_bars(entries, title, ylabel, note="", estimate="Mid"):
-    fig, ax = plt.subplots(figsize=(5.5, 4.2))
+    fig, ax = plt.subplots(figsize=(5.5, 5.0))
     labels = [e[0] for e in entries]
     mids   = [e[1] for e in entries]
     los    = [e[2] for e in entries]
     his    = [e[3] for e in entries]
-
-    if estimate == "Low":
-        vals = los
-    elif estimate == "High":
-        vals = his
-    else:
-        vals = mids
+    stds   = [e[4] if len(e) > 4 else 0 for e in entries]
 
     colors = PALETTE[: len(entries) - 1] + [GOOGLE_COLOR]
-    bars = ax.bar(range(len(labels)), vals, color=colors, alpha=0.85)
+    xs = range(len(labels))
+    has_sd = any(s > 0 for s in stds)
 
-    max_up = 0
-    for bar, v in zip(bars, vals):
-        ax.text(
-            bar.get_x() + bar.get_width() / 2,
-            bar.get_height() + max_up * 0.06 + 1e-9,
-            f"{v:.4f}", ha="center", va="bottom", fontsize=8, fontweight="bold",
+    if estimate == "Mid" and any((h - l) > 0 for l, h in zip(los, his)):
+        # Bar spans lo→hi (model uncertainty interval)
+        heights = [h - l for l, h in zip(los, his)]
+        ax.bar(xs, heights, bottom=los, color=colors, alpha=0.55,
+               edgecolor="none", label="Model uncertainty (lo–hi)")
+        # Mean marker line inside bar
+        ax.hlines(mids, [x - 0.38 for x in xs], [x + 0.38 for x in xs],
+                  colors=[c for c in colors], linewidth=2.0, label="Mean")
+        anchor = mids
+    else:
+        vals = los if estimate == "Low" else (his if estimate == "High" else mids)
+        ax.bar(xs, vals, color=colors, alpha=0.85, label="Value")
+        anchor = vals
+
+    # Error bars: ±1 SD across prompts
+    if has_sd:
+        ax.errorbar(
+            xs, anchor,
+            yerr=stds,
+            fmt="none", color="#222222", capsize=5, linewidth=1.4, alpha=0.8,
+            label="±1 SD across prompts",
         )
-    ax.set_xticks(range(len(labels)))
+
+    handles, lbls = ax.get_legend_handles_labels()
+    if handles:
+        ax.legend(handles, lbls, fontsize=7.5,
+                  loc="lower center", bbox_to_anchor=(0.5, 1.08),
+                  ncol=len(handles), framealpha=0.85, borderpad=0.5)
+
+    # Label all key points on each bar
+    def _lbl(x, y, txt, side="right", va="center"):
+        offset = 0.42 if side == "right" else -0.42
+        ha = "left" if side == "right" else "right"
+        ax.text(x + offset, y, txt, ha=ha, va=va, fontsize=6.8, color="#222222")
+
+    for i in range(len(labels)):
+        lo_v, hi_v, mid_v, sd_v = los[i], his[i], mids[i], stds[i]
+        side = "right"
+        if estimate == "Mid" and (hi_v - lo_v) > 0:
+            _lbl(i, lo_v,  f"lo {lo_v:.4f}",   side, va="top")
+            _lbl(i, hi_v,  f"hi {hi_v:.4f}",   side, va="bottom")
+            _lbl(i, mid_v, f"mean {mid_v:.4f}", side, va="center")
+        else:
+            _lbl(i, anchor[i], f"{anchor[i]:.4f}", side, va="bottom")
+        if sd_v > 0:
+            _lbl(i, mid_v + sd_v, f"+SD {mid_v + sd_v:.4f}", side, va="bottom")
+            _lbl(i, mid_v - sd_v, f"−SD {mid_v - sd_v:.4f}", side, va="top")
+
+    ax.set_xticks(list(xs))
     ax.set_xticklabels(labels, rotation=22, ha="right", fontsize=9)
     ax.set_title(title, fontsize=11, fontweight="bold", pad=9)
     ax.set_ylabel(ylabel, fontsize=9)
@@ -198,7 +227,7 @@ def plot_summary_bars(entries, title, ylabel, note="", estimate="Mid"):
     if xlabel_parts:
         ax.set_xlabel("  ·  ".join(xlabel_parts), fontsize=7.5, color="#888888")
     _clean(ax)
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.93])
     return fig
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -515,6 +544,141 @@ def chart_combined_all(processed_dict):
     return fig
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Combined 3×N interactive scenario grid (Altair)
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _hex_to_rgb(h):
+    h = h.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def chart_scenario_grid(processed: dict):
+    """3 rows × N cols Plotly subplot grid, returned as HTML string.
+    Hover a bar → that prompt's bars stay bright, others dim to 15%.
+    """
+    import json as _json
+
+    scenarios = list(processed.keys())
+    n = len(scenarios)
+
+    frames = []
+    for sname, df in processed.items():
+        tmp = df[["ID", "prompt_short", "energy_mid", "elec_mid", "water_mid"]].copy()
+        tmp["scenario"] = sname
+        frames.append(tmp)
+    combined = pd.concat(frames, ignore_index=True)
+    combined["ID"] = combined["ID"].astype(int)
+    combined["Q"]  = "Q" + combined["ID"].astype(str)
+
+    max_ew = max(combined["energy_mid"].max(), combined["elec_mid"].max()) * 1.15
+    max_w  = combined["water_mid"].max() * 1.15
+
+    metrics = [
+        ("energy_mid", "IT Energy (Wh)",      max_ew),
+        ("elec_mid",   "DC Electricity (Wh)", max_ew),
+        ("water_mid",  "Cooling Water (mL)",  max_w),
+    ]
+
+    fig = make_subplots(
+        rows=3, cols=n,
+        subplot_titles=scenarios + [""] * (2 * n),
+        vertical_spacing=0.10,
+        horizontal_spacing=0.06,
+    )
+
+    # track (scenario_idx, x_array) per trace for JS use
+    trace_meta = []
+
+    for ci, sname in enumerate(scenarios):
+        df_s = combined[combined["scenario"] == sname].sort_values("ID")
+        r, g, b = _hex_to_rgb(PALETTE[ci % len(PALETTE)])
+        qs = df_s["Q"].tolist()
+
+        for ri, (metric_col, metric_label, _) in enumerate(metrics):
+            yvals = df_s[metric_col].round(5).tolist()
+            # per-point color array (start fully opaque)
+            colors_init = [f"rgba({r},{g},{b},1.0)"] * len(qs)
+
+            fig.add_trace(
+                go.Bar(
+                    x=qs,
+                    y=yvals,
+                    marker_color=colors_init,
+                    marker_line_width=0,
+                    showlegend=False,
+                    text=[f"{v:.4f}" for v in yvals],
+                    textposition="outside",
+                    textfont_size=7,
+                    cliponaxis=False,
+                    hoverinfo="none",
+                ),
+                row=ri + 1, col=ci + 1,
+            )
+            trace_meta.append({"si": ci, "rgb": [r, g, b], "xs": qs})
+
+    # Y axes: all on left, shared range for rows 1&2, separate for row 3
+    for ri, (_, label, y_max) in enumerate(metrics):
+        fig.update_yaxes(
+            range=[0, y_max * 1.25],   # extra headroom for text labels
+            side="left",
+            title_text=label,
+            title_font_size=10,
+            tickfont_size=9,
+            row=ri + 1,
+        )
+
+    for ri in range(2):
+        fig.update_xaxes(showticklabels=False, row=ri + 1)
+    fig.update_xaxes(tickangle=-45, tickfont_size=8, row=3)
+
+    fig.update_layout(
+        height=560,
+        margin=dict(l=70, r=20, t=50, b=80),
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+    )
+
+    fig_dict = fig.to_dict()
+    fig_json = _json.dumps(fig_dict)
+    meta_json = _json.dumps(trace_meta)
+
+    html = f"""<!DOCTYPE html>
+<html><head>
+<script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+<style>body{{margin:0;padding:0;}}</style>
+</head><body>
+<div id="g" style="width:100%;"></div>
+<script>
+var fig = {fig_json};
+var meta = {meta_json};
+Plotly.newPlot('g', fig.data, fig.layout, {{responsive:true}});
+var div = document.getElementById('g');
+
+div.on('plotly_hover', function(d){{
+  var hx = d.points[0].x;
+  var upd = meta.map(function(m){{
+    return m.xs.map(function(x){{
+      var a = (x===hx) ? 1.0 : 0.15;
+      return 'rgba('+m.rgb[0]+','+m.rgb[1]+','+m.rgb[2]+','+a+')';
+    }});
+  }});
+  Plotly.restyle('g', {{'marker.color': upd}});
+}});
+
+div.on('plotly_unhover', function(){{
+  var upd = meta.map(function(m){{
+    return m.xs.map(function(x){{
+      return 'rgba('+m.rgb[0]+','+m.rgb[1]+','+m.rgb[2]+',1.0)';
+    }});
+  }});
+  Plotly.restyle('g', {{'marker.color': upd}});
+}});
+</script>
+</body></html>"""
+    return html
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # TABS
 # ══════════════════════════════════════════════════════════════════════════════
@@ -698,33 +862,33 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
     else:
         # ── Build summary entries ─────────────────────────────────────────────
         def _mean_iv(df, lo, mid, hi):
-            return df[mid].mean(), df[lo].mean(), df[hi].mean()
+            return df[mid].mean(), df[lo].mean(), df[hi].mean(), df[mid].std()
 
         csv_energy_ents, csv_elec_ents, csv_water_ents = [], [], []
         for sname, df_s in processed.items():
-            e_mid,  e_lo,  e_hi  = _mean_iv(df_s, "energy_lo", "energy_mid", "energy_hi")
-            el_mid, el_lo, el_hi = _mean_iv(df_s, "elec_lo",   "elec_mid",   "elec_hi")
-            w_mid,  w_lo,  w_hi  = _mean_iv(df_s, "water_lo",  "water_mid",  "water_hi")
-            csv_energy_ents.append((sname, e_mid,  e_lo,  e_hi))
-            csv_elec_ents.append(  (sname, el_mid, el_lo, el_hi))
-            csv_water_ents.append( (sname, w_mid,  w_lo,  w_hi))
+            e_mid,  e_lo,  e_hi,  e_std  = _mean_iv(df_s, "energy_lo", "energy_mid", "energy_hi")
+            el_mid, el_lo, el_hi, el_std = _mean_iv(df_s, "elec_lo",   "elec_mid",   "elec_hi")
+            w_mid,  w_lo,  w_hi,  w_std  = _mean_iv(df_s, "water_lo",  "water_mid",  "water_hi")
+            csv_energy_ents.append((sname, e_mid,  e_lo,  e_hi,  e_std))
+            csv_elec_ents.append(  (sname, el_mid, el_lo, el_hi, el_std))
+            csv_water_ents.append( (sname, w_mid,  w_lo,  w_hi,  w_std))
 
-        csv_energy_ents.append(("Google Search", csv_g_energy.mid, csv_g_energy.lo, csv_g_energy.hi))
+        csv_energy_ents.append(("Google Search", csv_g_energy.mid, csv_g_energy.lo, csv_g_energy.hi, 0))
         csv_elec_ents.append(  ("Google Search", kwh_to_wh(csv_g_elec).mid,
                                                   kwh_to_wh(csv_g_elec).lo,
-                                                  kwh_to_wh(csv_g_elec).hi))
+                                                  kwh_to_wh(csv_g_elec).hi, 0))
         csv_water_ents.append( ("Google Search", l_to_ml(csv_g_water).mid,
                                                   l_to_ml(csv_g_water).lo,
-                                                  l_to_ml(csv_g_water).hi))
+                                                  l_to_ml(csv_g_water).hi, 0))
 
         # ── SECTION 1: Summary charts ─────────────────────────────────────────
         st.divider()
-        st.subheader("📊 Summary Comparison  *(mean per query)*")
+        st.subheader("I. Summary Comparison")
         s1, s2, s3 = st.columns(3)
         with s1:
             st.pyplot(plot_summary_bars(csv_energy_ents,
                 "IT Equipment Energy (Wh)", "Wh / query",
-                note="error bars = model uncertainty (alpha lo–hi)" if ESTIMATE == "Mid" else "",
+                note="bar = lo–hi interval · error bar = ±1 SD across prompts" if ESTIMATE == "Mid" else "",
                 estimate=ESTIMATE))
         with s2:
             st.pyplot(plot_summary_bars(csv_elec_ents,
@@ -737,48 +901,32 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
 
         # ── SECTION 2: Per-scenario breakdowns ────────────────────────────────
         st.divider()
-        st.subheader("🔍 Per-Scenario Breakdown")
+        st.subheader("II. Per-Scenario Breakdown")
+        st.caption("Hover over a bar to highlight that prompt across all panels.")
+        st.components.v1.html(chart_scenario_grid(processed), height=580, scrolling=False)
 
-        for i, (sname, df_s) in enumerate(processed.items()):
-            color = PALETTE[i % len(PALETTE)]
-
-            with st.expander(f"📁  {sname}  —  {len(df_s)} queries", expanded=True):
-
-                # Top KPIs
-                k1, k2, k3, k4 = st.columns(4)
-                k1.metric("Avg IT Energy (Wh)",    f"{df_s['energy_mid'].mean():.4f}")
-                k2.metric("Avg Total Tokens",       f"{df_s['token_total'].mean():.0f}")
-                k3.metric("Avg Output Tokens",      f"{df_s['token_out'].mean():.0f}")
-                t2_valid = df_s["T2"].dropna()
-                k4.metric("Avg Full Response T2 (s)",
-                          f"{t2_valid.mean():.2f}" if not t2_valid.empty else "—")
-
-                st.markdown("---")
-
-                # ── Row 0: IT / DC electricity / Water distributions ──────────
-                st.markdown("**Footprint Distributions (IT · DC Electricity · Water)**")
-                st.pyplot(chart_three_distributions(df_s, sname, color, estimate=ESTIMATE))
-
-                # ── Raw data table ────────────────────────────────────────────
-                with st.expander("📋 Raw query data", expanded=False):
-                    st.dataframe(df_s, width="stretch")
-                    csv_bytes = df_s.to_csv(index=False).encode("utf-8")
-                    st.download_button(
-                        f"Download {sname} data",
-                        csv_bytes,
-                        f"{sname.replace(' ', '_')}_footprint.csv",
-                        "text/csv",
-                        key=f"dl_{i}",
-                    )
+        # ── Download combined table ───────────────────────────────────────────
+        all_frames = []
+        for sname, df_s in processed.items():
+            tmp = df_s.copy()
+            tmp.insert(0, "scenario", sname)
+            all_frames.append(tmp)
+        combined_csv = pd.concat(all_frames, ignore_index=True).to_csv(index=False).encode("utf-8")
+        st.download_button(
+            "⬇️  Download full results table (all scenarios)",
+            combined_csv,
+            "all_scenarios_footprint.csv",
+            "text/csv",
+            key="dl_all",
+        )
 
         # ── SECTION 4: Per-prompt cross-tool comparison ───────────────────────
         st.divider()
-        st.subheader("🔎 Per-Prompt Cross-Tool Comparison")
+        st.subheader("III. Per-Prompt Cross-Tool Comparison")
 
-        # Build a unified index: ID → prompt_short (from whichever tool has it)
         first_df = next(iter(processed.values()))
         prompt_options = {
-            str(row["ID"]): f"Q{int(row['ID'])}: {row['prompt_short']}"
+            str(row["ID"]): f"Q{int(row['ID'])}: {row['prompt']}"
             for _, row in first_df.iterrows()
         }
 
@@ -807,13 +955,7 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
 
             xs     = range(len(cmp_entries))
             colors = [e[4] for e in cmp_entries]
-
-            if ESTIMATE == "Low":
-                vals = [e[2] for e in cmp_entries]
-            elif ESTIMATE == "High":
-                vals = [e[3] for e in cmp_entries]
-            else:
-                vals = [e[1] for e in cmp_entries]
+            vals   = [e[1] for e in cmp_entries]
 
             bars = ax.bar(xs, vals, color=colors, alpha=0.82)
             for bar, v in zip(bars, vals):
@@ -826,10 +968,9 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
             ax.set_xticklabels([e[0] for e in cmp_entries], fontsize=10, rotation=15, ha="right")
             ax.set_ylabel(metric_label, fontsize=9)
             ax.set_title(metric_label, fontsize=10, fontweight="bold")
+            _clean(ax)
 
-        fig_cmp.suptitle(
-            f"{prompt_options[sel_id]}  [{ESTIMATE}]", fontsize=10, fontweight="bold"
-        )
+        fig_cmp.suptitle(prompt_options[sel_id], fontsize=10, fontweight="bold")
         plt.tight_layout()
         st.pyplot(fig_cmp)
         plt.close(fig_cmp)
