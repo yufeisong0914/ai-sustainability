@@ -121,18 +121,37 @@ def process_csv(df_raw: pd.DataFrame, model: str, anchor: str, location: str) ->
 
 
 def detect_tools(df: pd.DataFrame):
-    """Return tool names found as paired *_in / *_out columns."""
+    """Return tool names found as paired *_in / *_out columns (old format)."""
     in_cols = {c[:-3] for c in df.columns if c.endswith("_in")}
     out_cols = {c[:-4] for c in df.columns if c.endswith("_out")}
-    return sorted(in_cols & out_cols)
+    # Exclude scenario_N_in columns which belong to the new format
+    exclude = {c.replace("_in", "") for c in df.columns if c.startswith("scenario_") and c.endswith("_in")}
+    return sorted((in_cols & out_cols) - exclude)
 
 
-def process_wide_csv(df_raw: pd.DataFrame, tool: str,
+def detect_scenarios(df: pd.DataFrame):
+    """Return list of (col_prefix, display_name) from scenario_N_name/in/out columns (new format)."""
+    scenarios = []
+    i = 1
+    while True:
+        name_col = f"scenario_{i}_name"
+        in_col   = f"scenario_{i}_in"
+        out_col  = f"scenario_{i}_out"
+        if name_col in df.columns and in_col in df.columns and out_col in df.columns:
+            name = df[name_col].dropna().iloc[0] if df[name_col].notna().any() else f"Scenario {i}"
+            scenarios.append((f"scenario_{i}", str(name)))
+            i += 1
+        else:
+            break
+    return scenarios
+
+
+def process_wide_csv(df_raw: pd.DataFrame, prefix: str,
                      model: str, anchor: str, location: str) -> pd.DataFrame:
-    """Build a narrow df for one tool from wide-format CSV, then compute footprint."""
+    """Build a narrow df for one scenario/tool from *_in/*_out columns, then compute footprint."""
     df_narrow = df_raw.copy()
-    df_narrow["token_in"]  = df_raw[f"{tool}_in"]
-    df_narrow["token_out"] = df_raw[f"{tool}_out"]
+    df_narrow["token_in"]  = df_raw[f"{prefix}_in"]
+    df_narrow["token_out"] = df_raw[f"{prefix}_out"]
     return process_csv(df_narrow, model, anchor, location)
 
 
@@ -805,10 +824,15 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
     else:
         df_full = None
 
+    scenarios = []
     if df_full is not None:
-        tool_names = detect_tools(df_full)
-        if not tool_names:
-            st.error("No tool columns detected. Columns must follow the pattern `ToolName_in` / `ToolName_out`.")
+        scenarios = detect_scenarios(df_full)
+        if not scenarios:
+            # Fallback: old ToolName_in / ToolName_out format
+            tool_names = detect_tools(df_full)
+            scenarios = [(t, t) for t in tool_names]
+        if not scenarios:
+            st.error("No scenario columns detected. Use `scenario_N_name/in/out` columns or the legacy `ToolName_in/ToolName_out` pattern.")
             df_full = None
 
     if df_full is not None:
@@ -819,13 +843,13 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
         with cfg_c2:
             shared_loc    = st.selectbox("Location", locations, key="csv_loc")
 
-        # Per-tool model selector
-        st.markdown("**Model per tool**")
-        model_cols = st.columns(len(tool_names))
+        # Per-scenario model selector
+        st.markdown("**Model per scenario**")
+        model_cols = st.columns(len(scenarios))
         scenario_models = {}
-        for col, tool in zip(model_cols, tool_names):
+        for col, (prefix, sname) in zip(model_cols, scenarios):
             with col:
-                scenario_models[tool] = st.selectbox(tool, models, key=f"csv_model_{tool}")
+                scenario_models[prefix] = st.selectbox(sname, models, key=f"csv_model_{prefix}")
 
     # ── Google baseline ───────────────────────────────────────────────────────
     st.divider()
@@ -843,19 +867,19 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
     )
     csv_g_elec, csv_g_water = interval_from_wh(csv_g_energy, csv_gloc)
 
-    # ── Process each tool from wide-format columns ────────────────────────────
+    # ── Process each scenario from wide-format columns ────────────────────────
     processed = {}
     if df_full is not None:
-        for tool in tool_names:
+        for prefix, sname in scenarios:
             try:
-                df_proc = process_wide_csv(df_full, tool,
-                                           scenario_models[tool], shared_anchor, shared_loc)
+                df_proc = process_wide_csv(df_full, prefix,
+                                           scenario_models[prefix], shared_anchor, shared_loc)
                 if not df_proc.empty:
-                    processed[tool] = df_proc
+                    processed[sname] = df_proc
                 else:
-                    st.warning(f"{tool}: no valid rows.")
+                    st.warning(f"{sname}: no valid rows.")
             except Exception as e:
-                st.error(f"Error processing {tool}: {e}")
+                st.error(f"Error processing {sname}: {e}")
 
     if not processed:
         st.info("Upload a CSV file above to see results.")
