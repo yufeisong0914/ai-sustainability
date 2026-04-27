@@ -978,3 +978,10 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
         plt.tight_layout()
         st.pyplot(fig_cmp)
         plt.close(fig_cmp)
+
+        # ── SECTION 4: Distribution across queries (dot + box) ────────────────
+        st.divider()
+        st.subheader("IV. Query Distribution by Tool")
+        st.caption("Each dot is one query. Box shows median, IQR, and whiskers (1.5× IQR).")
+        st.pyplot(chart_combined_all(processed))
+        plt.close("all")
