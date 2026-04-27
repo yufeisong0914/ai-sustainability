@@ -501,7 +501,8 @@ def chart_three_distributions(df, name, color, estimate="Mid"):
 def chart_combined_all(processed_dict):
     """
     3 subplots (IT, DC electricity, water).
-    Each subplot: box plot per scenario with individual points overlaid.
+    Each subplot: box plot per scenario with individual query dots overlaid
+    and key statistics labelled (upper whisker, Q3, median, Q1, lower whisker).
     """
     metrics = [
         ("energy_mid", "IT Energy (Wh)"),
@@ -511,7 +512,7 @@ def chart_combined_all(processed_dict):
     names  = list(processed_dict.keys())
     colors = [PALETTE[i % len(PALETTE)] for i in range(len(names))]
 
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4.8))
+    fig, axes = plt.subplots(1, 3, figsize=(14, 5.4))
     for ax, (col, title) in zip(axes, metrics):
         data = [processed_dict[n][col].dropna().values for n in names]
 
@@ -524,7 +525,7 @@ def chart_combined_all(processed_dict):
             patch.set_facecolor(c)
             patch.set_alpha(0.60)
 
-        # Jitter all individual points on top
+        # Jitter all individual query dots on top
         np.random.seed(42)
         for i, (d, c) in enumerate(zip(data, colors)):
             jitter = np.random.uniform(-0.14, 0.14, len(d))
@@ -532,12 +533,33 @@ def chart_combined_all(processed_dict):
                        alpha=0.80, s=30, color=c,
                        edgecolors="gray", linewidth=0.4, zorder=5)
 
+            # Data labels: upper whisker, Q3, median, Q1, lower whisker
+            if len(d) == 0:
+                continue
+            q1  = np.percentile(d, 25)
+            q3  = np.percentile(d, 75)
+            med = np.median(d)
+            iqr = q3 - q1
+            lo_w = d[d >= q1 - 1.5 * iqr].min()
+            hi_w = d[d <= q3 + 1.5 * iqr].max()
+
+            x_lbl = i + 1 + 0.46
+            for y, tag in [
+                (hi_w, f"max {hi_w:.4f}"),
+                (q3,   f"Q3  {q3:.4f}"),
+                (med,  f"med {med:.4f}"),
+                (q1,   f"Q1  {q1:.4f}"),
+                (lo_w, f"min {lo_w:.4f}"),
+            ]:
+                ax.text(x_lbl, y, tag, ha="left", va="center",
+                        fontsize=6.2, color="#333333", family="monospace")
+
         ax.set_title(title, fontsize=10, fontweight="bold")
         ax.set_ylabel("Value", fontsize=9)
         ax.set_xticklabels(names, rotation=20, ha="right", fontsize=9)
         _clean(ax)
 
-    fig.suptitle("All Scenarios: Distribution Comparison", fontsize=12, fontweight="bold")
+    fig.suptitle("All Scenarios: Query Distribution Comparison", fontsize=12, fontweight="bold")
     plt.tight_layout()
     return fig
 
@@ -982,6 +1004,22 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
         # ── SECTION 4: Distribution across queries (dot + box) ────────────────
         st.divider()
         st.subheader("IV. Query Distribution by Tool")
-        st.caption("Each dot is one query. Box shows median, IQR, and whiskers (1.5× IQR).")
+        st.caption("Each dot is one query. Box shows the five-number summary; labels are annotated to the right of each box.")
         st.pyplot(chart_combined_all(processed))
         plt.close("all")
+
+        st.markdown("""
+**How to read the box plot**
+
+| Element | What it shows |
+|---|---|
+| **min** (lower whisker end) | Smallest value still within Q1 − 1.5 × IQR — the practical lower bound, excluding outliers |
+| **Q1** (bottom edge of box) | 25th percentile — 25 % of queries fall below this value |
+| **med** (red line) | Median (50th percentile) — the middle query; more robust than the mean when a few queries are unusually large |
+| **Q3** (top edge of box) | 75th percentile — 75 % of queries fall below this value |
+| **max** (upper whisker end) | Largest value still within Q3 + 1.5 × IQR — the practical upper bound, excluding outliers |
+| **Dots beyond whiskers** | Outliers — individual queries whose footprint is unusually high or low relative to the rest |
+| **Box height (IQR)** | Interquartile range (Q3 − Q1) — a narrow box means most queries cost similarly; a tall box means high variability |
+| **Individual dots** | Each dot is one query; jitter is added horizontally so overlapping points are visible |
+""")
+
