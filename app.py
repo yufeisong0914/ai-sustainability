@@ -39,8 +39,6 @@ st.caption(
     f"({GOOGLE_SOURCE}, {GOOGLE_YEAR})"
 )
 
-ESTIMATE = "Mid"
-
 models    = sorted(ALPHA_TABLE.keys())
 anchors   = sorted(ALPHA_TABLE[models[0]].keys())
 locations = list(LOCATION_PARAMS.keys())
@@ -697,6 +695,17 @@ div.on('plotly_unhover', function(){{
 </body></html>"""
     return html
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# GLOBAL SETTINGS
+# ══════════════════════════════════════════════════════════════════════════════
+
+ESTIMATE = st.selectbox(
+    "Estimate shown in Summary Comparison",
+    ["Low", "Mid", "High"],
+    index=1,
+    key="global_estimate",
+)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TABS
