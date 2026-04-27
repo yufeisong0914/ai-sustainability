@@ -678,17 +678,6 @@ div.on('plotly_unhover', function(){{
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# GLOBAL SETTINGS
-# ══════════════════════════════════════════════════════════════════════════════
-
-ESTIMATE = st.selectbox(
-    "Estimate shown in Summary Comparison",
-    ["Low", "Mid", "High"],
-    index=1,
-    key="global_estimate",
-)
-
-# ══════════════════════════════════════════════════════════════════════════════
 # TABS
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -760,6 +749,7 @@ with tab_manual:
 
     st.divider()
     st.subheader("Comparison Results")
+    ESTIMATE = st.selectbox("Estimate", ["Low", "Mid", "High"], index=1, key="estimate_manual")
     c1, c2, c3 = st.columns(3)
     with c1:
         st.pyplot(plot_summary_bars(energy_ents, "IT Equipment Energy (Wh)", "Wh",
@@ -898,6 +888,7 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
         # ── SECTION 1: Summary charts ─────────────────────────────────────────
         st.divider()
         st.subheader("I. Summary Comparison")
+        ESTIMATE = st.selectbox("Estimate", ["Low", "Mid", "High"], index=1, key="estimate_csv")
         s1, s2, s3 = st.columns(3)
         with s1:
             st.pyplot(plot_summary_bars(csv_energy_ents,
