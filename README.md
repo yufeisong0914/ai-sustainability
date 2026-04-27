@@ -35,15 +35,20 @@ Enter token counts and model parameters directly for up to three scenarios plus 
 
 ### 📂 Upload CSV
 
-Upload a single CSV file containing test results for multiple tools. Each row is one query; token columns must follow the naming convention `ToolName_in` / `ToolName_out` (e.g. `Consensus_in`, `Consensus_out`).
+Upload a single CSV file containing test results for multiple scenarios/tools. Each row is one query.
+
+#### Recommended format — `scenario_N_name/in/out`
+
+Use numbered scenario columns. Each scenario has three columns: a name, an input token count, and an output token count. Scenarios are auto-detected in order (`scenario_1`, `scenario_2`, …).
 
 **Required columns**
 
 | Column | Description |
 |---|---|
 | `prompt` | Query text (shown truncated in charts) |
-| `ToolName_in` | Input token count for that tool |
-| `ToolName_out` | Output token count for that tool |
+| `scenario_N_name` | Display name for scenario N (e.g. `Consensus`) |
+| `scenario_N_in` | Input token count for scenario N |
+| `scenario_N_out` | Output token count for scenario N |
 
 **Optional columns**
 
@@ -61,12 +66,22 @@ Upload a single CSV file containing test results for multiple tools. Each row is
 **Example CSV format**
 
 ```
+ID,prompt,scenario_1_name,scenario_1_in,scenario_1_out,scenario_2_name,scenario_2_in,scenario_2_out,scenario_3_name,scenario_3_in,scenario_3_out
+1,What are recent advances in X?,Consensus,16,1249,Keenious,16,181,Scopusai,16,1393
+2,How does Y affect Z?,Consensus,19,849,Keenious,19,134,Scopusai,19,869
+```
+
+#### Legacy format — `ToolName_in/out`
+
+The original format embeds the tool name directly in the column header. It is still supported for backwards compatibility but the `scenario_N` format is preferred.
+
+```
 ID,prompt,Consensus_in,Consensus_out,Keenious_in,Keenious_out,Scopusai_in,Scopusai_out
 1,What are recent advances in X?,16,1249,16,181,16,1393
 2,How does Y affect Z?,19,849,19,134,19,869
 ```
 
-After uploading, select a model per tool (shared anchor and location), then the dashboard generates:
+After uploading, select a model per scenario (shared anchor and location), then the dashboard generates:
 
 1. **Summary Comparison** — mean IT energy, DC electricity, and cooling water per query for each tool vs. the Google baseline.
 2. **Per-Scenario Breakdown** — for each tool: per-query bar charts for all three footprint metrics, plus KPI metrics and a raw data table.
