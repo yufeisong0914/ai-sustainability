@@ -184,19 +184,9 @@ def plot_summary_bars(entries, title, ylabel, note="", estimate="Mid"):
     xs = range(len(labels))
     has_sd = any(s > 0 for s in stds)
 
-    if estimate == "Mid" and any((h - l) > 0 for l, h in zip(los, his)):
-        # Bar spans lo→hi (model uncertainty interval)
-        heights = [h - l for l, h in zip(los, his)]
-        ax.bar(xs, heights, bottom=los, color=colors, alpha=0.55,
-               edgecolor="none", label="Model uncertainty (lo–hi)")
-        # Mean marker line inside bar
-        ax.hlines(mids, [x - 0.38 for x in xs], [x + 0.38 for x in xs],
-                  colors=[c for c in colors], linewidth=2.0, label="Mean")
-        anchor = mids
-    else:
-        vals = los if estimate == "Low" else (his if estimate == "High" else mids)
-        ax.bar(xs, vals, color=colors, alpha=0.85, label="Value")
-        anchor = vals
+    vals = los if estimate == "Low" else (his if estimate == "High" else mids)
+    ax.bar(xs, vals, color=colors, alpha=0.85)
+    anchor = vals
 
     # Error bars: ±1 SD across prompts
     if has_sd:
@@ -220,29 +210,20 @@ def plot_summary_bars(entries, title, ylabel, note="", estimate="Mid"):
         ax.text(x + offset, y, txt, ha=ha, va=va, fontsize=6.8, color="#222222")
 
     for i in range(len(labels)):
-        lo_v, hi_v, mid_v, sd_v = los[i], his[i], mids[i], stds[i]
-        side = "right"
-        if estimate == "Mid" and (hi_v - lo_v) > 0:
-            _lbl(i, lo_v,  f"lo {lo_v:.4f}",   side, va="top")
-            _lbl(i, hi_v,  f"hi {hi_v:.4f}",   side, va="bottom")
-            _lbl(i, mid_v, f"mean {mid_v:.4f}", side, va="center")
-        else:
-            _lbl(i, anchor[i], f"{anchor[i]:.4f}", side, va="bottom")
+        sd_v = stds[i]
+        _lbl(i, anchor[i], f"{anchor[i]:.4f}", "right", va="bottom")
         if sd_v > 0:
-            _lbl(i, mid_v + sd_v, f"+SD {mid_v + sd_v:.4f}", side, va="bottom")
-            _lbl(i, mid_v - sd_v, f"−SD {mid_v - sd_v:.4f}", side, va="top")
+            _lbl(i, anchor[i] + sd_v, f"+SD {anchor[i] + sd_v:.4f}", "right", va="bottom")
+            _lbl(i, anchor[i] - sd_v, f"−SD {anchor[i] - sd_v:.4f}", "right", va="top")
 
     ax.set_xticks(list(xs))
     ax.set_xticklabels(labels, rotation=22, ha="right", fontsize=9)
     ax.set_title(title, fontsize=11, fontweight="bold", pad=9)
     ax.set_ylabel(ylabel, fontsize=9)
-    xlabel_parts = []
+    xlabel_parts = [f"showing {estimate.lower()} estimate"]
     if note:
         xlabel_parts.append(note)
-    if estimate != "Mid":
-        xlabel_parts.append(f"showing {estimate.lower()} estimate")
-    if xlabel_parts:
-        ax.set_xlabel("  ·  ".join(xlabel_parts), fontsize=7.5, color="#888888")
+    ax.set_xlabel("  ·  ".join(xlabel_parts), fontsize=7.5, color="#888888")
     _clean(ax)
     plt.tight_layout(rect=[0, 0, 1, 0.93])
     return fig
@@ -921,7 +902,6 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
         with s1:
             st.pyplot(plot_summary_bars(csv_energy_ents,
                 "IT Equipment Energy (Wh)", "Wh / query",
-                note="bar = lo–hi interval · error bar = ±1 SD across prompts" if ESTIMATE == "Mid" else "",
                 estimate=ESTIMATE))
         with s2:
             st.pyplot(plot_summary_bars(csv_elec_ents,
