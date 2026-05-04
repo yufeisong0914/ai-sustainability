@@ -38,8 +38,9 @@
   </div>
   <div id="root"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@stlite/browser@1.7.2/build/stlite.js"></script>
-  <script>
+  <script type="module">
+    import { mount } from "https://cdn.jsdelivr.net/npm/@stlite/browser@1.7.2/build/stlite.js";
+
     Promise.all([
       fetch("./app.py").then(r => r.text()),
       fetch("./evaluation.py").then(r => r.text()),
@@ -50,7 +51,7 @@
       fetch("./alpha_range_data/alpha_ranges.json").then(r => r.text()),
       fetch("./alpha_range_data/alpha_ranges.csv").then(r => r.text()),
     ]).then(([appPy, evalPy, locationCsv, table4Csv, baselineCsv, alphaFullJson, alphaJson, alphaCsv]) => {
-      stlite.mount(
+      mount(
         {
           requirements: ["pandas", "numpy", "matplotlib", "plotly", "altair"],
           entrypoint: "app.py",
