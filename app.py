@@ -737,7 +737,7 @@ with tab_manual:
 
     with colG:
         st.subheader(f"Baseline ({GOOGLE_LABEL})")
-        searches  = st.number_input("# Searches", 1, 500, 10)
+        searches  = st.number_input("# Searches", 1, 500, 1)
         google_loc = st.selectbox("Location", locations, key="gloc")
         g_energy = Interval(
             lo=GOOGLE_WH_PER_QUERY * searches,
@@ -858,7 +858,7 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
     with st.expander("⚙️  Google Search Baseline", expanded=False):
         gc1, gc2 = st.columns(2)
         with gc1:
-            csv_searches = st.number_input("# Searches", 1, 500, 10, key="csv_searches")
+            csv_searches = st.number_input("# Searches", 1, 500, 1, key="csv_searches")
         with gc2:
             csv_gloc = st.selectbox("Location", locations, key="csv_gloc")
 
