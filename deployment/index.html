@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LLM Footprint Comparator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/browser@1.7.2/build/stlite.css" />
+  <style>
+    #loading {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      font-family: sans-serif;
+      color: #555;
+      gap: 16px;
+      z-index: 9999;
+    }
+    #loading.hidden { display: none; }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #e0e0e0;
+      border-top-color: #ff4b4b;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Loading app — this may take 20–30 seconds on first visit.</p>
+  </div>
+  <div id="root"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@stlite/browser@1.7.2/build/stlite.js"></script>
+  <script>
+    Promise.all([
+      fetch("./app.py").then(r => r.text()),
+      fetch("./evaluation.py").then(r => r.text()),
+      fetch("./config/location_params.csv").then(r => r.text()),
+      fetch("./config/table4_ranges.csv").then(r => r.text()),
+      fetch("./config/baseline_params.csv").then(r => r.text()),
+      fetch("./alpha_range_data/alpha_ranges_full_anchors.json").then(r => r.text()),
+      fetch("./alpha_range_data/alpha_ranges.json").then(r => r.text()),
+      fetch("./alpha_range_data/alpha_ranges.csv").then(r => r.text()),
+    ]).then(([appPy, evalPy, locationCsv, table4Csv, baselineCsv, alphaFullJson, alphaJson, alphaCsv]) => {
+      stlite.mount(
+        {
+          requirements: ["pandas", "numpy", "matplotlib", "plotly", "altair"],
+          entrypoint: "app.py",
+          files: {
+            "app.py": appPy,
+            "evaluation.py": evalPy,
+            "config/location_params.csv": locationCsv,
+            "config/table4_ranges.csv": table4Csv,
+            "config/baseline_params.csv": baselineCsv,
+            "alpha_range_data/alpha_ranges_full_anchors.json": alphaFullJson,
+            "alpha_range_data/alpha_ranges.json": alphaJson,
+            "alpha_range_data/alpha_ranges.csv": alphaCsv,
+          },
+          streamlitConfig: {
+            "client.toolbarMode": "viewer",
+          },
+        },
+        document.getElementById("root")
+      );
+      document.getElementById("loading").classList.add("hidden");
+    }).catch(err => {
+      document.getElementById("loading").innerHTML =
+        `<p style="color:red">Failed to load: ${err.message}</p>`;
+    });
+  </script>
+</body>
+</html>

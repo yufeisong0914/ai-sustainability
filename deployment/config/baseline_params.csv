@@ -1,0 +1,2 @@
+name,label,energy_wh_per_query,source,year,notes
+google-search,Google Search,0.3,Google Sustainability Report,2009,"Energy per plain web search query; used as non-AI control group baseline"

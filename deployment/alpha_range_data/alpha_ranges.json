@@ -1,0 +1,134 @@
+{
+  "gpt-4.1": {
+    "alpha_min_wh_per_token": 0.001323,
+    "alpha_max_wh_per_token": 0.001838,
+    "alpha_mid_wh_per_token": 0.0015804999999999999,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "gpt-4.1-mini": {
+    "alpha_min_wh_per_token": 0.000667,
+    "alpha_max_wh_per_token": 0.000878,
+    "alpha_mid_wh_per_token": 0.0007725,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "gpt-4.1-nano": {
+    "alpha_min_wh_per_token": 0.00023349999999999998,
+    "alpha_max_wh_per_token": 0.00034149999999999995,
+    "alpha_mid_wh_per_token": 0.0002875,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "o4-mini-high": {
+    "alpha_min_wh_per_token": 0.0026014999999999996,
+    "alpha_max_wh_per_token": 0.0047785,
+    "alpha_mid_wh_per_token": 0.0036899999999999997,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "o3": {
+    "alpha_min_wh_per_token": 0.0015229999999999996,
+    "alpha_max_wh_per_token": 0.00363,
+    "alpha_mid_wh_per_token": 0.0025765,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "o3-mini-high": {
+    "alpha_min_wh_per_token": 0.0027675,
+    "alpha_max_wh_per_token": 0.0040975000000000004,
+    "alpha_mid_wh_per_token": 0.0034325000000000002,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "o3-mini": {
+    "alpha_min_wh_per_token": 0.001093,
+    "alpha_max_wh_per_token": 0.00133,
+    "alpha_mid_wh_per_token": 0.0012115,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "o1": {
+    "alpha_min_wh_per_token": 0.0017749999999999999,
+    "alpha_max_wh_per_token": 0.0022719999999999997,
+    "alpha_mid_wh_per_token": 0.0020234999999999997,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "o1-mini": {
+    "alpha_min_wh_per_token": 0.000571,
+    "alpha_max_wh_per_token": 0.000976,
+    "alpha_mid_wh_per_token": 0.0007735,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "claude-3.7-sonnet": {
+    "alpha_min_wh_per_token": 0.0013939999999999998,
+    "alpha_max_wh_per_token": 0.001595,
+    "alpha_mid_wh_per_token": 0.0014945,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "claude-3.5-sonnet": {
+    "alpha_min_wh_per_token": 0.0016909999999999998,
+    "alpha_max_wh_per_token": 0.0019470000000000002,
+    "alpha_mid_wh_per_token": 0.0018189999999999999,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "claude-3.5-haiku": {
+    "alpha_min_wh_per_token": 0.0020905,
+    "alpha_max_wh_per_token": 0.0023735,
+    "alpha_mid_wh_per_token": 0.002232,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3-8b": {
+    "alpha_min_wh_per_token": 0.0001825,
+    "alpha_max_wh_per_token": 0.0001875,
+    "alpha_mid_wh_per_token": 0.000185,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.70b": {
+    "alpha_min_wh_per_token": 0.0013885,
+    "alpha_max_wh_per_token": 0.0014824999999999999,
+    "alpha_mid_wh_per_token": 0.0014355,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.1-8b": {
+    "alpha_min_wh_per_token": 7.849999999999998e-05,
+    "alpha_max_wh_per_token": 9.35e-05,
+    "alpha_mid_wh_per_token": 8.599999999999999e-05,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.1-70b": {
+    "alpha_min_wh_per_token": 0.002236,
+    "alpha_max_wh_per_token": 0.0022890000000000002,
+    "alpha_mid_wh_per_token": 0.0022625,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.1-405b": {
+    "alpha_min_wh_per_token": 0.0043285,
+    "alpha_max_wh_per_token": 0.0047135,
+    "alpha_mid_wh_per_token": 0.004521,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.2-1b": {
+    "alpha_min_wh_per_token": 0.0001585,
+    "alpha_max_wh_per_token": 0.00018350000000000002,
+    "alpha_mid_wh_per_token": 0.000171,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.2-3b": {
+    "alpha_min_wh_per_token": 0.00023099999999999998,
+    "alpha_max_wh_per_token": 0.000248,
+    "alpha_mid_wh_per_token": 0.0002395,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.2-vision-11b": {
+    "alpha_min_wh_per_token": 8.549999999999999e-05,
+    "alpha_max_wh_per_token": 0.0001565,
+    "alpha_mid_wh_per_token": 0.000121,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.2-vision-90b": {
+    "alpha_min_wh_per_token": 0.0020429999999999997,
+    "alpha_max_wh_per_token": 0.002491,
+    "alpha_mid_wh_per_token": 0.002267,
+    "anchor_used": "1k_in_1k_out"
+  },
+  "llama-3.3-70b": {
+    "alpha_min_wh_per_token": 0.00034050000000000004,
+    "alpha_max_wh_per_token": 0.0004195,
+    "alpha_mid_wh_per_token": 0.00038,
+    "anchor_used": "1k_in_1k_out"
+  }
+}
