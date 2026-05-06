@@ -1,0 +1,6 @@
+ID,prompt,scenario_1_name,scenario_1_in,scenario_1_out,scenario_2_name,scenario_2_in,scenario_2_out,scenario_3_name,scenario_3_in,scenario_3_out
+1,What are the recent advancements in malicious domain and subdomain detection?,Consensus,16,1249,Keenious,16,181,Scopusai,16,1393
+2,"What method performs the best on acc, sen, sp, DICE, and IoU metrics?",Consensus,19,849,Keenious,19,134,Scopusai,19,869
+3,How does hydrogen gas emanation affect the mineral composition of soils?,Consensus,16,796,Keenious,16,220,Scopusai,16,871
+4,has anyone studied how to inverse from the embedding vector of a document and only output information about a specific query?,Consensus,30,960,Keenious,30,263,Scopusai,30,894
+5,Can you suggest latest researches that optimizes each agent in multi agent LLM using reinforcement learning?,Consensus,23,1713,Keenious,23,166,Scopusai,23,1074

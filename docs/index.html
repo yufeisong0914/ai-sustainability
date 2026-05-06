@@ -50,7 +50,8 @@
       fetch("./alpha_range_data/alpha_ranges_full_anchors.json").then(r => r.text()),
       fetch("./alpha_range_data/alpha_ranges.json").then(r => r.text()),
       fetch("./alpha_range_data/alpha_ranges.csv").then(r => r.text()),
-    ]).then(([appPy, evalPy, locationCsv, table4Csv, baselineCsv, alphaFullJson, alphaJson, alphaCsv]) => {
+      fetch("./Data/test%20v2.csv").then(r => r.text()),
+    ]).then(([appPy, evalPy, locationCsv, table4Csv, baselineCsv, alphaFullJson, alphaJson, alphaCsv, testV2Csv]) => {
       mount(
         {
           requirements: ["pandas", "numpy", "matplotlib", "plotly", "altair"],
@@ -64,6 +65,7 @@
             "alpha_range_data/alpha_ranges_full_anchors.json": alphaFullJson,
             "alpha_range_data/alpha_ranges.json": alphaJson,
             "alpha_range_data/alpha_ranges.csv": alphaCsv,
+            "Data/test v2.csv": testV2Csv,
           },
           streamlitConfig: {
             "client.toolbarMode": "viewer",

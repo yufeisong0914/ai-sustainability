@@ -703,7 +703,7 @@ div.on('plotly_unhover', function(){{
 # TABS
 # ══════════════════════════════════════════════════════════════════════════════
 
-tab_manual, tab_csv = st.tabs(["⚙️  Manual Input", "📂  Upload CSV"])
+tab_csv, tab_manual = st.tabs(["📂  Upload CSV", "⚙️  Manual Input"])
 
 # ──────────────────────────────────────────────────────────────────────────────
 # TAB 1: MANUAL INPUT
@@ -824,7 +824,10 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
             st.error(f"Could not read CSV: {e}")
             df_full = None
     else:
-        df_full = None
+        try:
+            df_full = pd.read_csv("Data/test v2.csv")
+        except Exception:
+            df_full = None
 
     scenarios = []
     if df_full is not None:
