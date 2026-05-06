@@ -826,6 +826,7 @@ Each row = one query. Must include **`prompt`** and tool token columns. Tool tok
     else:
         try:
             df_full = pd.read_csv("Data/test v2.csv")
+            st.info("📄 Showing results for the default sample file. Upload your own CSV above to analyse your data.")
         except Exception:
             df_full = None
 
